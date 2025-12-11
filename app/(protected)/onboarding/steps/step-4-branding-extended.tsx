@@ -28,10 +28,8 @@ export default function Step4BrandingExtended() {
             try {
                 const formData = new FormData()
                 formData.append('file', file)
-                formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || '')
 
-                const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-                const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                const response = await fetch('/api/upload', {
                     method: 'POST',
                     body: formData,
                 })
@@ -40,8 +38,10 @@ export default function Step4BrandingExtended() {
                     throw new Error('Upload failed')
                 }
 
-                const data = await response.json()
-                updateData({ brandLogo: data.secure_url })
+                const result = await response.json()
+                if (result.secure_url) {
+                    updateData({ brandLogo: result.secure_url })
+                }
             } catch (error) {
                 console.error('Error uploading image:', error)
                 alert('Failed to upload image. Please check your Cloudinary configuration.')
