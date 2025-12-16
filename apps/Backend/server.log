@@ -1,0 +1,17 @@
+nohup: ignoring input
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+Server is running on port 3000
+MongoDB connected successfully
+Test onboarding called with: {
+  businessName: "Test",
+  licenseNumber: "123",
+  phoneNumber: "456",
+  address: "Test Address",
+}
+Headers: {
+  host: "localhost:3000",
+  "user-agent": "curl/8.17.0",
+  accept: "*/*",
+  "content-type": "application/json",
+  "content-length": "90",
+}
