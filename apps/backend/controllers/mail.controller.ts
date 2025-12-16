@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import { emailQueue } from '../queues/emailQueue.js';
 import { MailModel } from '../models/mails.model.js';
-import { generateMail } from '../services/generateMail.js';
+import { generateMail } from '../services/generateMail.service.js';
 import { basicTemplate, brandedTemplate, professionalTemplate, modernTemplate } from '../email-templates/emailTemplates.js';
 
 const DELAY_DAYS = 5;
@@ -89,6 +89,7 @@ export const confirmEmails = async (req: Request, res: Response) => {
         const mailDoc = await MailModel.create({
             to,
             status: 'active',
+            templateStyle: requestedTemplate,
             steps: mails.map((m, index) => ({
                 stepId: uuid(),
                 step: index,
@@ -106,7 +107,7 @@ export const confirmEmails = async (req: Request, res: Response) => {
             
             await emailQueue.add(
                 'send-email',
-                { mailId: mailDoc._id, stepId: step.stepId },
+                { mailId: mailDoc._id, stepId: step.stepId,  realtorId: realtor._id },
                 { 
                     delay: delaySeconds * 1000,
                     removeOnComplete: true 

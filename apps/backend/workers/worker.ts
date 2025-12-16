@@ -1,22 +1,99 @@
 import { Worker } from "bullmq";
-/* import { connection } from "../queues/connection.js";
+import { connection } from "../queues/connection.js";
+import { MailModel } from "../models/mails.model.js";
+import { sendMail } from "../services/mails.service.js";
+import { generateUnsubscribeToken } from "../utils/unsubscribeToken.js";
 
-console.log("Worker starting...");
+import {
+  basicTemplate,
+  brandedTemplate,
+  professionalTemplate,
+  modernTemplate,
+} from "../email-templates/emailTemplates.ts";
+
+import { RealtorModel } from "../models/realtor.model.js";
+
+console.log("Email worker starting...");
 
 new Worker(
   "email-queue",
   async (job) => {
-    console.log("Worker active");
-    console.log("Job received:", job.data);
+    const { mailId, stepId, realtorId } = job.data;
 
-    // TODO: integrate with actual email service (send email)
+    console.log("Processing job:", job.id, job.data);
 
-    console.log("Worker finished job");
+    const mail = await MailModel.findById(mailId);
+    if (!mail) {
+      console.log("Mail doc not found, skipping");
+      return;
+    }
+
+    if (mail.unsubscribed) {
+      console.log("Recipient unsubscribed:", mail.to);
+      mail.status = "paused";
+      await mail.save();
+      return;
+    }
+
+    const step = mail.steps.find((s) => s.stepId === stepId);
+    if (!step || step.sent) {
+      console.log("Step already sent or missing, skipping");
+      return;
+    }
+
+    const realtor = await RealtorModel.findById(realtorId);
+    if (!realtor) {
+      throw new Error("Realtor not found");
+    }
+
+    try {
+      const token = generateUnsubscribeToken(mail._id.toString());
+      const unsubscribeUrl =
+        `${process.env.BASE_URL}/api/mail/unsubscribe?token=${token}`;
+
+      let html: string;
+
+      switch (mail.templateStyle) {
+        case "branded":
+          html = brandedTemplate(step.subject!, step.body!, realtor);
+          break;
+        case "professional":
+          html = professionalTemplate(step.subject!, step.body!, realtor);
+          break;
+        case "modern":
+          html = modernTemplate(step.subject!, step.body!, realtor);
+          break;
+        default:
+          html = basicTemplate(step.subject!, step.body!, realtor);
+      }
+
+      await sendMail({
+        to: mail.to,
+        subject: step.subject!,
+        html,
+        unsubscribeUrl,
+      });
+
+      step.sent = true;
+      step.sentAt = new Date();
+      step.error = undefined;
+
+      await mail.save();
+
+      console.log("Email sent:", mail.to, "step:", step.step);
+    } catch (err: any) {
+      console.error("Email send failed:", err.message);
+
+      step.error = err.message;
+      await mail.save();
+
+      throw err;
+    }
   },
   {
-    connection
+    connection,
+    concurrency: 5, 
   }
 );
 
-console.log("Worker is now BLOCKED");
-console.log("waiting for jobs...") */;
+console.log("Email worker ready, wating");

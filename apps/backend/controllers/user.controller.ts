@@ -50,7 +50,6 @@ export const getCurrentUser = async (req: Request, res: Response) => {
                 email: clerkUser.emailAddresses[0]?.emailAddress,
                 profileImageUrl: realtor.profileImageUrl || clerkUser.imageUrl,
                 isOnboarded: true,
-
                 phNo: realtor.phNo,
                 brokerageName: realtor.brokerageName,
                 professionalEmail: realtor.professionalEmail,
@@ -136,7 +135,6 @@ export const createOrUpdateRealtor = async (req: Request, res: Response) => {
         } else {
             realtor = new RealtorModel({
                 clerkUserId,
-
                 phNo: phoneNumber || phNo,
                 brokerageName: businessName || brokerageName,
                 licenseNumber: licenseNumber,
