@@ -1,9 +1,13 @@
-export const generateMail = (topic: String) => {
+import {generateAIMail} from "./openAI.service.js";
+
+export const generateMail = async (topic: string) => {
+    const generatedMail = await generateAIMail(topic);
     const mail = {
-        subject: "Demo Subject for mail",
-        body: `Dear User, this is a demo mail regarding ${topic}.`
+        subject: generatedMail.subject,
+        body: generatedMail.body
     };
     return {
-        subject: mail.subject, body: mail.body, status: "generated"
+        mail,
+        status: "generated"
     } 
 };  

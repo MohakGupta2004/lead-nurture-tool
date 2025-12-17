@@ -46,8 +46,8 @@ export const generateEmails = async (req: Request, res: Response) => {
             mails: mailContent.map((mail, index) => ({
                 mail: {
                     mailNo: index + 1,
-                    subject: mail.subject,
-                    body: mail.body
+                    subject: mail.mail.subject,
+                    body: mail.mail.body
                 }
             }))
         });
