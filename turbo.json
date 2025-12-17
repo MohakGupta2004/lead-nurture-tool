@@ -17,7 +17,9 @@
         "UNSUBSCRIBE_JWT_SECRET",
         "BASE_URL",
         "REDIS_HOST",
-        "REDIS_PORT"
+        "REDIS_PORT",
+        "REDIS_URL",
+        "OPENAI_API_KEY"
     ],
     "tasks": {
         "dev": {

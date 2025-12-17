@@ -5,5 +5,6 @@ import IORedis from "ioredis";
     port: Number(process.env.REDIS_PORT) || 6379,
     maxRetriesPerRequest: null
 }); */
-export const connection = new IORedis(process.env.REDIS_HOST!)
+
+export const connection = new IORedis(process.env.REDIS_URL!)
 console.log("REDIS CONNECTED")
