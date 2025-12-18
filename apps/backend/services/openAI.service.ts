@@ -3,7 +3,7 @@ import { z } from "zod";
 
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 
@@ -15,67 +15,99 @@ const MailSchema = z.object({
 export type MailInterface = z.infer<typeof MailSchema>;
 
 
-export const generateAIMail = async (topic: string): Promise<MailInterface> => {
-  const response = await openai.responses.create({
-    model: "gpt-4.1-nano",
-    input: [
+interface RealtorContext {
+  username?: string | null;
+  brokerageName?: string | null;
+  professionalEmail?: string | null;
+  phNo?: string | null;
+  yearsInBusiness?: number | null;
+  markets?: string[] | null;
+  realtorType?: "Individual" | "Agency" | null;
+  address?: string | null;
+}
+
+
+export const generateAIMail = async (
+  topic: string,
+  realtorContext: RealtorContext
+): Promise<MailInterface> => {
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
       {
         role: "system",
         content: `
-            You are a professional real estate email copywriter.
+            You are a senior real estate email copywriter with 10+ years of experience
+            writing calm, trust-building nurture emails for realtors.
 
-            Your job:
-            - Write short, warm, trust-building emails
-            - Audience: realtors nurturing buyer or seller leads
-            - Tone: human, friendly, calm, non-pushy
+            Goals:
+            - Build trust, not urgency
+            - Reduce hesitation
+            - Sound human and personal
 
-            STRICT RULES:
-            - Output ONLY valid JSON
-            - No markdown
-            - No explanations
-            - No extra text
-        `
+            Rules:
+            - No hype
+            - No sales pressure
+            - Short sentences
+            - Friendly, conversational tone
+        `,
       },
       {
         role: "user",
         content: `
-            Write a nurturing real estate email on the topic:
+            Write a real estate lead-nurture email on this topic:
+
             "${topic}"
 
-            Return JSON in EXACT format:
+            Requirements:
+            - Subject: 3 to 6 words, friendly and curiosity-driven
+            - Body: 3 to 4 short paragraphs
+            - Each paragraph: 1 to 2 sentences
+            - End with a soft CTA (reply / check-in)
+
+            Personalization:
+            - Use realtor context naturally
+            - Ignore missing or null fields
+
+            Realtor context:
+            ${JSON.stringify(realtorContext)}
+
+            ### Example
+            Topic: Checking in after inquiry
+
+            Output:
             {
-            "subject": "string",
-            "body": "string"
+              "subject": "Just checking in",
+              "body": "Hi there,\n\nI wanted to check in and see how your home search is going so far. A lot of buyers take some time before things start to feel clear, and that’s completely normal.\n\nIf anything you’ve seen recently raised questions, I’m always happy to share an honest perspective.\n\nNo rush at all — feel free to reply whenever it’s helpful."
             }
 
-            Guidelines:
-            - Subject: short, curiosity-driven, friendly
-            - Body: 3 to 4 short paragraphs
-            - End with a soft CTA (reply / question / check-in) (if required by the topic)
-        `
-      }
-    ]
+            Now generate a NEW email.
+          `,
+      },
+    ],
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "mail",
+        strict: true,
+        schema: {
+          type: "object",
+          properties: {
+            subject: { type: "string" },
+            body: { type: "string" },
+          },
+          required: ["subject", "body"],
+          additionalProperties: false,
+        },
+      },
+    },
   });
 
-  const rawText = response.output_text;
-
-  if (!rawText) {
-    throw new Error("AI returned empty response");
+  const choice = completion.choices[0];
+  if (!choice || !choice.message.content) {
+    throw new Error("AI did not return content");
   }
 
-  let parsedJson: unknown;
-
-  try {
-    parsedJson = JSON.parse(rawText);
-  } catch {
-    throw new Error("AI did not return valid JSON");
-  }
-
-  const result = MailSchema.safeParse(parsedJson);
-
-  if (!result.success) {
-    throw new Error("AI JSON failed schema validation");
-  }
-  console.log("AI generated mail response:", result.data);
-  return result.data;
+  const mail = JSON.parse(choice.message.content);
+  return MailSchema.parse(mail);
 };

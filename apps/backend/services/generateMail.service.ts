@@ -1,7 +1,19 @@
 import {generateAIMail} from "./openAI.service.js";
 
-export const generateMail = async (topic: string) => {
-    const generatedMail = await generateAIMail(topic);
+interface RealtorContext {
+  username?: string | null;
+  brokerageName?: string | null;
+  professionalEmail?: string | null;
+  phNo?: string | null;
+  yearsInBusiness?: number | null;
+  markets?: string[] | null;
+  realtorType?: "Individual" | "Agency" | null;
+  address?: string | null;
+}
+
+
+export const generateMail = async (topic: string, realtorContext: RealtorContext) => {
+    const generatedMail = await generateAIMail(topic, realtorContext);
     const mail = {
         subject: generatedMail.subject,
         body: generatedMail.body

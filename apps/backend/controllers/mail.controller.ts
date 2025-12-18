@@ -8,6 +8,18 @@ import { basicTemplate, brandedTemplate, professionalTemplate, modernTemplate } 
 const DELAY_DAYS = 5;
 const SECONDS_PER_DAY = 24 * 60 * 60;
 
+interface RealtorContextForMail {
+    username?: string | null;
+    brokerageName?: string | null;
+    professionalEmail?: string | null;
+    phNo?: string | null;
+    yearsInBusiness?: number | null;
+    markets?: string[] | null;
+    realtorType?: "Individual" | "Agency" | null;
+    address?: string | null;
+}
+
+
 const generateEmailPreview = (subject: string, body: string, templateStyle: string, realtor: any): string => {
     switch (templateStyle?.toLowerCase()) {
         case 'branded':
@@ -33,12 +45,21 @@ export const generateEmails = async (req: Request, res: Response) => {
         if (!to) {
             return res.status(400).json({ error: 'Recipient email (to) is required' });
         }
-
+        const realtorContext: RealtorContextForMail = {
+            username: req.user.username || '',
+            brokerageName: realtor.brokerageName || '',
+            professionalEmail: realtor.professionalEmail || '',
+            phNo: realtor.phNo || '',
+            yearsInBusiness: realtor.yearsInBusiness || 0,
+            markets: realtor.markets || [],
+            realtorType: realtor.realtorType || 'Individual',
+            address: realtor.address || ''
+        };
         const mailContent = await Promise.all([
-            generateMail('Introduction and initial contact'),
-            generateMail('Market insights and property updates'),
-            generateMail('Personalized recommendations'),
-            generateMail('Follow-up and next steps')
+            generateMail('Introduction and initial contact', realtorContext),
+            generateMail('Market insights and property updates', realtorContext),
+            generateMail('Personalized recommendations', realtorContext),
+            generateMail('Follow-up and next steps', realtorContext)
         ]);
 
         res.json({
@@ -65,7 +86,7 @@ export const confirmEmails = async (req: Request, res: Response) => {
         }
 
         const { to, mails, templateStyle = 'basic' } = req.body;
-        
+
         if (!to) {
             return res.status(400).json({ error: 'Recipient email (to) is required' });
         }
@@ -75,10 +96,10 @@ export const confirmEmails = async (req: Request, res: Response) => {
 
         const allowedTemplates = getTemplatePermissions(realtor.subscriptionPlan);
         const requestedTemplate = templateStyle.toLowerCase();
-        
+
         if (!allowedTemplates.includes(requestedTemplate)) {
-            return res.status(403).json({ 
-                error: 'Template access denied', 
+            return res.status(403).json({
+                error: 'Template access denied',
                 message: `The '${requestedTemplate}' template requires a higher subscription plan.`,
                 allowedTemplates: allowedTemplates,
                 currentPlan: realtor.subscriptionPlan || 'free',
@@ -102,15 +123,15 @@ export const confirmEmails = async (req: Request, res: Response) => {
         for (const step of mailDoc.steps) {
             const delaySeconds = step.step === 0 ? 0 : step.step * DELAY_DAYS * SECONDS_PER_DAY;
             const delayDescription = step.step === 0 ? 'immediate' : `${step.step * DELAY_DAYS} days`;
-            
+
             console.log(`Queuing email step ${step.step} for ${to} - ${delayDescription}`);
-            
+
             await emailQueue.add(
                 'send-email',
-                { mailId: mailDoc._id, stepId: step.stepId,  realtorId: realtor._id },
-                { 
+                { mailId: mailDoc._id, stepId: step.stepId, realtorId: realtor._id },
+                {
                     delay: delaySeconds * 1000,
-                    removeOnComplete: true 
+                    removeOnComplete: true
                 }
             );
         }
@@ -138,7 +159,7 @@ const getTemplatePermissions = (realtorPlan: string | undefined) => {
         'premium': ['basic', 'branded', 'professional'],
         'enterprise': ['basic', 'branded', 'professional', 'modern']
     };
-    
+
     return planPermissions[realtorPlan as keyof typeof planPermissions] || ['basic'];
 };
 
@@ -150,17 +171,17 @@ export const getMailPreview = async (req: Request, res: Response) => {
         }
 
         const { subject, body, templateStyle = 'basic' } = req.query;
-        
+
         if (!subject || !body) {
             return res.status(400).json({ error: 'Subject and body are required as query parameters' });
         }
 
         const allowedTemplates = getTemplatePermissions(realtor.subscriptionPlan);
         const requestedTemplate = (templateStyle as string).toLowerCase();
-        
+
         if (!allowedTemplates.includes(requestedTemplate)) {
-            return res.status(403).json({ 
-                error: 'Template access denied', 
+            return res.status(403).json({
+                error: 'Template access denied',
                 message: `The '${requestedTemplate}' template requires a higher subscription plan.`,
                 allowedTemplates: allowedTemplates,
                 currentPlan: realtor.subscriptionPlan || 'free',
@@ -169,9 +190,9 @@ export const getMailPreview = async (req: Request, res: Response) => {
         }
 
         const previewHtml = generateEmailPreview(
-            subject as string, 
-            body as string, 
-            requestedTemplate, 
+            subject as string,
+            body as string,
+            requestedTemplate,
             realtor
         );
         res.send(previewHtml);
