@@ -55,16 +55,16 @@ new Worker(
 
       switch (mail.templateStyle) {
         case "branded":
-          html = brandedTemplate(step.subject!, step.body!, realtor);
+          html = brandedTemplate(step.subject!, step.body!, realtor, unsubscribeUrl);
           break;
         case "professional":
-          html = professionalTemplate(step.subject!, step.body!, realtor);
+          html = professionalTemplate(step.subject!, step.body!, realtor, unsubscribeUrl);
           break;
         case "modern":
-          html = modernTemplate(step.subject!, step.body!, realtor);
+          html = modernTemplate(step.subject!, step.body!, realtor, unsubscribeUrl);
           break;
         default:
-          html = basicTemplate(step.subject!, step.body!, realtor);
+          html = basicTemplate(step.subject!, step.body!, realtor, unsubscribeUrl);
       }
 
       await sendMail({
@@ -92,7 +92,7 @@ new Worker(
   },
   {
     connection,
-    concurrency: 5, 
+    concurrency: 5,
   }
 );
 

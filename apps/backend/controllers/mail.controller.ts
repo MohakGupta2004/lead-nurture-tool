@@ -23,14 +23,14 @@ interface RealtorContextForMail {
 const generateEmailPreview = (subject: string, body: string, templateStyle: string, realtor: any): string => {
     switch (templateStyle?.toLowerCase()) {
         case 'branded':
-            return brandedTemplate(subject, body, realtor);
+            return brandedTemplate(subject, body, realtor, '#');
         case 'professional':
-            return professionalTemplate(subject, body, realtor);
+            return professionalTemplate(subject, body, realtor, '#');
         case 'modern':
-            return modernTemplate(subject, body, realtor);
+            return modernTemplate(subject, body, realtor, '#');
         case 'basic':
         default:
-            return basicTemplate(subject, body, realtor);
+            return basicTemplate(subject, body, realtor, '#');
     }
 };
 
