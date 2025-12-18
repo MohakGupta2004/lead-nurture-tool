@@ -15,10 +15,8 @@
         "MAIL_FROM",
         "MAILGUN_DOMAIN",
         "UNSUBSCRIBE_JWT_SECRET",
-        "BASE_URL",
-        "REDIS_HOST",
-        "REDIS_PORT",
         "REDIS_URL",
+        "BASE_URL",
         "OPENAI_API_KEY"
     ],
     "tasks": {
