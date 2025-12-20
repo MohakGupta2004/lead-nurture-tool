@@ -1,20 +1,19 @@
-import express from 'express';
-import { MailModel } from '../models/mails.model.ts';
-import { verifyUnsubscribeToken } from '../utils/verifyUnsubscribeToken';
-import { 
-    generateEmails, 
-    confirmEmails, 
-    getMailPreview 
-} from '../controllers/mail.controller';
+import express from "express";
+import { MailModel } from "../models/mails.model.ts";
+import { verifyUnsubscribeToken } from "../utils/verifyUnsubscribeToken";
+import {
+  generateEmails,
+  confirmEmails,
+  getMailPreview,
+} from "../controllers/mail.controller";
 
 const router = express.Router();
 
-router.post('/generate', generateEmails);
+router.post("/generate", generateEmails);
 
-router.post('/confirm', confirmEmails);
+router.post("/confirm", confirmEmails);
 
-router.get('/preview', getMailPreview);
-
+router.get("/preview", getMailPreview);
 router.get("/unsubscribe", async (req, res) => {
   try {
     const { token } = req.query;
@@ -66,6 +65,5 @@ router.get("/unsubscribe", async (req, res) => {
     res.status(500).send("Something went wrong");
   }
 });
-
 
 export default router;
