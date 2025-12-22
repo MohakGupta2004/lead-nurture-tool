@@ -12,8 +12,8 @@ interface RealtorContext {
 }
 
 
-export const generateMail = async (topic: string, realtorContext: RealtorContext) => {
-    const generatedMail = await generateAIMail(topic, realtorContext);
+export const generateMail = async (topic: string, realtorContext: RealtorContext, city:string ) => {
+    const generatedMail = await generateAIMail(topic, realtorContext, city);
     const mail = {
         subject: generatedMail.subject,
         body: generatedMail.body

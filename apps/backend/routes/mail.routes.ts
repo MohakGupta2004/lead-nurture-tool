@@ -17,11 +17,9 @@ const router = express.Router();
 router.post("/generate", generateEmails);
 router.post("/confirm", confirmEmails);
 
-// previews & queries
 router.get("/preview", getMailPreview);
 router.get("/getMailsByCampaignId/:campaignId", getMailsByCampaignId);
 
-// unsubscribe route
 router.get("/unsubscribe", async (req, res) => {
   try {
     const { token } = req.query;
@@ -76,7 +74,6 @@ router.get("/unsubscribe", async (req, res) => {
   }
 });
 
-// festive trigger
 router.post("/festiveTrigger", festiveTriggerController);
 
 export default router;

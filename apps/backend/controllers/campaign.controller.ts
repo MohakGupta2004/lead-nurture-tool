@@ -52,7 +52,7 @@ export const createCampaign = async (req: Request, res: Response) => {
             return res.status(403).json({ error: 'Realtor access required' });
         }
 
-        const { name, objective, targetPersona, description } = req.body;
+        const { name, objective, targetPersona, description, city } = req.body;
 
         console.log('Campaign creation request:', { name, objective, targetPersona, description });
 
@@ -73,6 +73,7 @@ export const createCampaign = async (req: Request, res: Response) => {
             targetPersona: targetPersona.trim(),
             description: description?.trim() || '',
             status: 'Paused',
+            city: city,
             realtorId: realtor._id
         });
 

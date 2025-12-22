@@ -10,6 +10,7 @@ const CampaignSchema = new mongoose.Schema(
         realtorId: { type: mongoose.Schema.Types.ObjectId, ref: 'RealtorModel', required: true },
         leads: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LeadModel' }],
         mailIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'MailModel' }],
+        city: { type: String, required: false },
     },{timestamps: true}
 );
 

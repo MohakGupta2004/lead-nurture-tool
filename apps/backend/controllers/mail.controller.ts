@@ -50,6 +50,14 @@ export const generateEmails = async (req: Request, res: Response) => {
     if (!realtor) {
       return res.status(403).json({ error: "Realtor access required" });
     }
+    const { campaignId } = req.body;
+    const campaign = await CampaignModel.findById(campaignId);
+    if (!campaign) {
+      return res.status(404).json({ error: "Campaign not found" });
+    }
+
+    let city = campaign.city;
+    if(!city) city = "your city";
 
     const realtorContext: RealtorContextForMail = {
       username: req.user.username || "",
@@ -63,10 +71,10 @@ export const generateEmails = async (req: Request, res: Response) => {
     };
 
     const mailContent = await Promise.all([
-      generateMail("Introduction and initial contact", realtorContext),
-      generateMail("Market insights and property updates", realtorContext),
-      generateMail("Personalized recommendations", realtorContext),
-      generateMail("Follow-up and next steps", realtorContext),
+      generateMail("Introduction and initial contact", realtorContext, city),
+      generateMail("Market insights and property updates", realtorContext, city),
+      generateMail("Personalized recommendations", realtorContext, city),
+      generateMail("Follow-up and next steps", realtorContext, city),
     ]);
 
     res.json({
