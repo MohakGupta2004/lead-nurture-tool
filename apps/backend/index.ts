@@ -13,6 +13,9 @@ import { requireAuthApi, requiredRealtorAuth, requireAuthWithUserCreation } from
 
 dotenv.config();
 import connectDB from './db/db';
+import "./workers/festiveTrigger.worker.js";
+import "./workers/festiveMail.worker.js";
+import "./workers/workers.js";
 
 const app = express();
 app.use(cors({

@@ -7,7 +7,8 @@ const LeadSchema = new mongoose.Schema({
     realtorId: { type: mongoose.Schema.Types.ObjectId, ref: 'RealtorModel', required: true },
     campaignId: { type: mongoose.Schema.Types.ObjectId, ref: 'CampaignModel', required: true }, // Required campaign
     address: { type: String },
-    }, { timestamps: true }
+    unsubscribed: { type: Boolean, default: false }
+}, { timestamps: true }
 );
 
 export const LeadModel = mongoose.model("LeadModel", LeadSchema);

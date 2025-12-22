@@ -8,14 +8,17 @@ if (!SECRET) {
 
 type UnsubscribePayload = {
   mailId: string;
+  email: string;
   type: "unsubscribe";
 };
 
 export const generateUnsubscribeToken = (
-  mailId: string
+  mailId: string,
+  email: string
 ): string => {
   const payload: UnsubscribePayload = {
     mailId,
+    email,
     type: "unsubscribe",
   };
 

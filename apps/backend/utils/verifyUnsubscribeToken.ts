@@ -4,6 +4,7 @@ const SECRET = process.env.UNSUBSCRIBE_JWT_SECRET as string;
 
 type UnsubscribePayload = {
   mailId: string;
+  email: string;
   type: "unsubscribe";
   iat: number;
   exp: number;

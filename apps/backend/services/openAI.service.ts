@@ -110,10 +110,10 @@ export const generateAIMail = async (
 
             Follow this exact quality level and emotional tone.
           `,
-        },
-        {
-          role: "user",
-          content: `
+      },
+      {
+        role: "user",
+        content: `
               Write a real estate lead-nurture email on this topic:
 
               "${topic}"
@@ -170,6 +170,76 @@ export const generateAIMail = async (
               }
 
               Now generate a NEW email for the given topic using the same quality, tone, and structure.
+        `,
+      },
+    ],
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "mail",
+        strict: true,
+        schema: {
+          type: "object",
+          properties: {
+            subject: { type: "string" },
+            body: { type: "string" },
+          },
+          required: ["subject", "body"],
+          additionalProperties: false,
+        },
+      },
+    },
+  });
+
+  const choice = completion.choices[0];
+  if (!choice || !choice.message.content) {
+    throw new Error("AI did not return content");
+  }
+
+  const mail = JSON.parse(choice.message.content);
+  return MailSchema.parse(mail);
+};
+
+export const generateFestiveMail = async (
+  festival: string,
+  realtorContext: RealtorContext
+): Promise<MailInterface> => {
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "system",
+        content: `
+            You are a warm, friendly, and professional real estate agent.
+            You are sending a festive greeting email to your leads.
+
+            OBJECTIVE:
+            - Wish the lead a happy \${festival}.
+            - Keep it short, sweet, and genuine.
+            - NO SALES PITCH. This is purely relationship building.
+            - Make them feel remembered and valued.
+
+            TONE:
+            - Warm
+            - Festive
+            - Professional but personal
+            - Gratitude-focused
+
+            RULES:
+            - Subject must be catchy and festive (e.g., "Wishing you joy this \${festival}", "Happy \${festival} from [Name]")
+            - Body should be 2-3 short paragraphs.
+            - Mention the festival explicitly.
+            - Sign off with the realtor's name/brokerage if available.
+            - Output must strictly follow the provided JSON schema.
+          `,
+      },
+      {
+        role: "user",
+        content: `
+            Write a festive email for the festival: "\${festival}"
+
+            REALTOR CONTEXT:
+            \${JSON.stringify(realtorContext)}
         `,
       },
     ],

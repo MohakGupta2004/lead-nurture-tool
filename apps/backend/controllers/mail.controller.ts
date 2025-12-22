@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
 import { emailQueue } from "../queues/emailQueue.js";
 import { MailModel } from "../models/mails.model.js";
+import { CampaignModel } from "../models/campaing.model.js";
 import { generateMail } from "../services/generateMail.service.js";
 import {
   basicTemplate,
@@ -60,6 +61,7 @@ export const generateEmails = async (req: Request, res: Response) => {
       realtorType: realtor.realtorType || "Individual",
       address: realtor.address || "",
     };
+
     const mailContent = await Promise.all([
       generateMail("Introduction and initial contact", realtorContext),
       generateMail("Market insights and property updates", realtorContext),
@@ -83,6 +85,7 @@ export const generateEmails = async (req: Request, res: Response) => {
   }
 };
 
+
 export const confirmEmails = async (req: Request, res: Response) => {
   try {
     const realtor = req.realtor;
@@ -90,78 +93,92 @@ export const confirmEmails = async (req: Request, res: Response) => {
       return res.status(403).json({ error: "Realtor access required" });
     }
 
-    const { to, mails, templateStyle = "basic" } = req.body;
+    const { campaignId, mails, templateStyle = "basic" } = req.body;
 
-    if (!to) {
-      return res
-        .status(400)
-        .json({ error: "Recipient email (to) is required" });
+    const campaign = await CampaignModel.findById(campaignId)
+      .populate("leads")
+      .exec();
+
+    if (!campaign) {
+      return res.status(404).json({ message: "Campaign not found" });
     }
+
+    if (campaign.status !== "Active") {
+      return res.status(400).json({ error: "Campaign is not active" });
+    }
+
+    const leads = (campaign.leads as any[]).filter(
+      (lead) => !lead.unsubscribed
+    );
+
+    if (leads.length === 0) {
+      return res.status(400).json({ error: "No active leads found" });
+    }
+
     if (!mails || !Array.isArray(mails) || mails.length === 0) {
       return res.status(400).json({ error: "Mails array is required" });
     }
 
-    const allowedTemplates = getTemplatePermissions(realtor.subscriptionPlan);
+    const allowedTemplates = getTemplatePermissions(
+      realtor.subscriptionPlan
+    );
     const requestedTemplate = templateStyle.toLowerCase();
 
     if (!allowedTemplates.includes(requestedTemplate)) {
       return res.status(403).json({
         error: "Template access denied",
-        message: `The '${requestedTemplate}' template requires a higher subscription plan.`,
-        allowedTemplates: allowedTemplates,
-        currentPlan: realtor.subscriptionPlan || "free",
         upgradeRequired: true,
       });
     }
 
     const mailDoc = await MailModel.create({
-      to,
-      status: "active",
+      campaignId: campaign._id,
       templateStyle: requestedTemplate,
       steps: mails.map((m, index) => ({
         stepId: uuid(),
         step: index,
-        sent: false,
         subject: m.mail.subject,
         body: m.mail.body,
       })),
     });
 
-    for (const step of mailDoc.steps) {
-      const delaySeconds =
-        step.step === 0 ? 0 : step.step * DELAY_DAYS * SECONDS_PER_DAY;
-      const delayDescription =
-        step.step === 0 ? "immediate" : `${step.step * DELAY_DAYS} days`;
+    const leadEmails = leads.map((lead) => lead.email);
+    const BATCH_SIZE = 50;
 
-      console.log(
-        `Queuing email step ${step.step} for ${to} - ${delayDescription}`
-      );
+    for (let i = 0; i < leadEmails.length; i += BATCH_SIZE) {
+      const batch = leadEmails.slice(i, i + BATCH_SIZE);
 
-      await emailQueue.add(
-        "send-email",
-        { mailId: mailDoc._id, stepId: step.stepId, realtorId: realtor._id },
-        {
-          delay: delaySeconds * 1000,
-          removeOnComplete: true,
-        }
-      );
+      for (const step of mailDoc.steps) {
+        const delaySeconds =
+          step.step === 0 ? 0 : step.step * DELAY_DAYS * SECONDS_PER_DAY;
+
+        await emailQueue.add(
+          "send-sequence-email-batch",
+          {
+            mailId: mailDoc._id,
+            stepId: step.stepId,
+            realtor,
+            recipients: batch,
+          },
+          {
+            delay: delaySeconds * 1000,
+            removeOnComplete: true,
+          }
+        );
+      }
     }
 
     res.json({
       success: true,
-      mailId: mailDoc._id,
-      message: `Successfully queued ${mailDoc.steps.length} emails for delivery`,
-      steps: mailDoc.steps.map((step) => ({
-        stepId: step.stepId,
-        step: step.step,
-        delayDays: step.step === 0 ? 0 : step.step * DELAY_DAYS,
-      })),
+      totalLeads: leads.length,
+      totalEmailsQueued: leads.length * mailDoc.steps.length,
     });
   } catch (error) {
     console.error("Error confirming emails:", error);
     res.status(500).json({ error: "Failed to confirm emails" });
   }
 };
+
 
 const getTemplatePermissions = (realtorPlan: string | undefined) => {
   const planPermissions = {
@@ -182,7 +199,6 @@ export const getMailPreview = async (req: Request, res: Response) => {
     if (!realtor) {
       return res.status(403).json({ error: "Realtor access required" });
     }
-
     const { subject, body, templateStyle = "basic" } = req.query;
 
     if (!subject || !body) {
@@ -217,3 +233,32 @@ export const getMailPreview = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to generate mail preview" });
   }
 };
+
+export const getMailsByCampaignId = async (req: Request, res: Response) => {
+  const realtor = req.realtor;
+  if (!realtor) {
+    return res.status(403).json({ error: "Realtor access required" });
+  }
+
+  try {
+    const campaign = await CampaignModel.findById(req.params.campaignId).exec();
+
+    if (!campaign) {
+      return res.status(404).json({ error: "Campaign not found" });
+    }
+
+    if (campaign.realtorId.toString() !== realtor._id.toString()) {
+      return res.status(403).json({ error: "Realtor access denied" });
+    }
+
+    const mails = await MailModel.find({
+      campaignId: campaign._id,
+    }).exec();
+
+    res.json(mails);
+  } catch (error) {
+    console.error("Error fetching mails by campaign ID:", error);
+    res.status(500).json({ error: "Failed to fetch mails by campaign ID" });
+  }
+};
+
