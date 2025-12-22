@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Eye, Save, Send } from "lucide-react";
+import { ArrowLeft, Eye, Save, Lock, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { api } from "@/lib/api";
@@ -21,45 +21,92 @@ interface EmailData {
     };
 }
 
+interface APIMailStep {
+    stepId: string;
+    step: number;
+    subject: string;
+    body: string;
+}
+
+interface APIMail {
+    _id: string;
+    campaignId: string;
+    templateStyle: string;
+    steps: APIMailStep[];
+}
+
 export default function ComposeEmailPage() {
     const { id, mailNo } = useParams();
     const router = useRouter();
+    const { getToken } = useAuth();
     const [subject, setSubject] = useState("");
-    const { getToken } = useAuth()
     const [body, setBody] = useState("");
     const [templateStyle, setTemplateStyle] = useState("basic");
     const [loading, setLoading] = useState(true);
+    const [isConfirmed, setIsConfirmed] = useState(false);
 
     useEffect(() => {
-        // First try to retrieve emails from localStorage (persistent)
-        let storedEmails = localStorage.getItem(`campaign_${id}_emails`);
+        const loadEmailData = async () => {
+            try {
+                const token = await getToken();
 
-        // Fallback to sessionStorage for backward compatibility
-        if (!storedEmails) {
-            storedEmails = sessionStorage.getItem('generatedEmails');
-        }
+                // 1. Check if emails are confirmed in API
+                const mailsResponse = await api.get(`/api/mail/getMailsByCampaignId/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
 
-        if (storedEmails) {
-            const emails: EmailData[] = JSON.parse(storedEmails);
-            const email = emails.find(e => e.mail.mailNo === Number(mailNo));
+                if (mailsResponse.data && mailsResponse.data.length > 0) {
+                    const apiMail: APIMail = mailsResponse.data[0];
+                    const emailStep = apiMail.steps.find(s => s.step === Number(mailNo) - 1);
 
-            if (email) {
-                setSubject(email.mail.subject);
-                setBody(email.mail.body);
-            } else {
-                toast.error("Email not found");
-                router.push(`/dashboard/automations/${id}/emails`);
+                    if (emailStep) {
+                        setSubject(emailStep.subject);
+                        setBody(emailStep.body);
+                        setTemplateStyle(apiMail.templateStyle || "basic");
+                        setIsConfirmed(true);
+                        setLoading(false);
+                        return;
+                    }
+                }
+
+                // 2. Fallback to localStorage for drafts
+                let storedEmails = localStorage.getItem(`campaign_${id}_emails`);
+                if (!storedEmails) {
+                    storedEmails = sessionStorage.getItem('generatedEmails');
+                }
+
+                if (storedEmails) {
+                    const emails: EmailData[] = JSON.parse(storedEmails);
+                    const email = emails.find(e => e.mail.mailNo === Number(mailNo));
+
+                    if (email) {
+                        setSubject(email.mail.subject);
+                        setBody(email.mail.body);
+                        setIsConfirmed(false);
+                    } else {
+                        toast.error("Email not found");
+                        router.push(`/dashboard/automations/${id}/emails`);
+                    }
+                } else {
+                    router.push(`/dashboard/automations/${id}`);
+                }
+            } catch (error) {
+                console.error("Failed to load email", error);
+                toast.error("Failed to load email data");
+            } finally {
+                setLoading(false);
             }
-        } else {
-            router.push(`/dashboard/automations/${id}`);
-        }
-        setLoading(false);
-    }, [id, mailNo, router]);
-    const handleSave = () => {
-        // First try to retrieve emails from localStorage (persistent)
-        let storedEmails = localStorage.getItem(`campaign_${id}_emails`);
+        };
 
-        // Fallback to sessionStorage for backward compatibility
+        if (id && mailNo) {
+            loadEmailData();
+        }
+    }, [id, mailNo, router, getToken]);
+
+    const handleSave = () => {
+        if (isConfirmed) return;
+
+        let storedEmails = localStorage.getItem(`campaign_${id}_emails`);
         if (!storedEmails) {
             storedEmails = sessionStorage.getItem('generatedEmails');
         }
@@ -70,28 +117,19 @@ export default function ComposeEmailPage() {
         }
 
         const emails: EmailData[] = JSON.parse(storedEmails);
-        const email = emails.find(e => e.mail.mailNo === Number(mailNo));
+        const emailIndex = emails.findIndex(e => e.mail.mailNo === Number(mailNo));
 
-        if (email) {
-            email.mail.subject = subject;
-            email.mail.body = body;
+        if (emailIndex !== -1) {
+            emails[emailIndex].mail.subject = subject;
+            emails[emailIndex].mail.body = body;
 
             const updatedEmailsData = JSON.stringify(emails);
-            // Save to both localStorage and sessionStorage
             localStorage.setItem(`campaign_${id}_emails`, updatedEmailsData);
             sessionStorage.setItem('generatedEmails', updatedEmailsData);
             toast.success("Email saved successfully!");
         } else {
             toast.error("Email not found");
         }
-    }
-
-    if (loading) {
-        return (
-            <div className="flex h-[50vh] items-center justify-center">
-                <p className="text-muted-foreground">Loading...</p>
-            </div>
-        );
     }
 
     const handlePreview = async () => {
@@ -103,7 +141,6 @@ export default function ComposeEmailPage() {
                 }
             });
 
-            // Open preview in a new window
             const previewWindow = window.open('', '_blank', 'width=800,height=600');
             if (previewWindow) {
                 previewWindow.document.write(response.data);
@@ -121,6 +158,13 @@ export default function ComposeEmailPage() {
         }
     }
 
+    if (loading) {
+        return (
+            <div className="flex h-[50vh] items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-8">
@@ -132,29 +176,44 @@ export default function ComposeEmailPage() {
                         </Link>
                     </Button>
                     <div>
-                        <h2 className="text-3xl font-bold tracking-tight">Compose Email</h2>
+                        <h2 className="text-3xl font-bold tracking-tight">
+                            {isConfirmed ? "View Email" : "Compose Email"}
+                        </h2>
                         <p className="text-muted-foreground">
-                            Edit and customize your email
+                            {isConfirmed
+                                ? "This email is confirmed and cannot be modified"
+                                : "Edit and customize your email"}
                         </p>
                     </div>
                 </div>
-
             </div>
 
             <Card>
-                <CardHeader className="flex justify-between">
-                    <CardTitle>Mail #{mailNo}</CardTitle>
-                    <CardDescription>Edit the subject and body of your email</CardDescription>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0">
                     <div>
+                        <CardTitle>Mail #{mailNo}</CardTitle>
+                        <CardDescription>
+                            {isConfirmed ? "Confirmed content" : "Edit the subject and body of your email"}
+                        </CardDescription>
+                    </div>
+                    <div className="flex gap-2">
                         <Button variant="outline" onClick={handlePreview}>
                             <Eye className="mr-2 h-4 w-4" />
                             Preview
                         </Button>
 
-                        <Button variant="outline" onClick={handleSave}>
-                            <Save className="mr-2 h-4 w-4" />
-                            Save
-                        </Button>
+                        {!isConfirmed && (
+                            <Button onClick={handleSave}>
+                                <Save className="mr-2 h-4 w-4" />
+                                Save
+                            </Button>
+                        )}
+                        {isConfirmed && (
+                            <Badge variant="secondary" className="bg-green-500/10 text-green-500 border-green-500/20">
+                                <Lock className="mr-1 h-3 w-3" />
+                                Confirmed
+                            </Badge>
+                        )}
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -168,6 +227,7 @@ export default function ComposeEmailPage() {
                             onChange={(e) => setSubject(e.target.value)}
                             placeholder="Enter email subject"
                             className="text-lg"
+                            disabled={isConfirmed}
                         />
                     </div>
 
@@ -181,6 +241,7 @@ export default function ComposeEmailPage() {
                             onChange={(e) => setBody(e.target.value)}
                             placeholder="Enter email body"
                             className="min-h-[400px] font-mono text-sm"
+                            disabled={isConfirmed}
                         />
                     </div>
 
@@ -188,7 +249,11 @@ export default function ComposeEmailPage() {
                         <label htmlFor="template" className="text-sm font-medium">
                             Template Style
                         </label>
-                        <Select value={templateStyle} onValueChange={setTemplateStyle}>
+                        <Select
+                            value={templateStyle}
+                            onValueChange={setTemplateStyle}
+                            disabled={isConfirmed}
+                        >
                             <SelectTrigger>
                                 <SelectValue placeholder="Select a template" />
                             </SelectTrigger>
@@ -200,7 +265,9 @@ export default function ComposeEmailPage() {
                             </SelectContent>
                         </Select>
                         <p className="text-xs text-muted-foreground">
-                            Select the template style for your email preview
+                            {isConfirmed
+                                ? "Template style used for this email"
+                                : "Select the template style for your email preview"}
                         </p>
                     </div>
 

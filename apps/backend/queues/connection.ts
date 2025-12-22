@@ -6,5 +6,7 @@ import IORedis from "ioredis";
     maxRetriesPerRequest: null
 }); */
 
-export const connection = new IORedis(process.env.REDIS_URL!)
+export const connection = new IORedis(process.env.REDIS_URL!, {
+  maxRetriesPerRequest: null
+})
 console.log("REDIS CONNECTED")

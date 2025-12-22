@@ -19,7 +19,7 @@ router.post("/confirm", confirmEmails);
 
 // previews & queries
 router.get("/preview", getMailPreview);
-router.get("/getMailsByCampaignId", getMailsByCampaignId);
+router.get("/getMailsByCampaignId/:campaignId", getMailsByCampaignId);
 
 // unsubscribe route
 router.get("/unsubscribe", async (req, res) => {
