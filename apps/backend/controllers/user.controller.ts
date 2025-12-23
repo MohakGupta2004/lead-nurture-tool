@@ -13,7 +13,7 @@ export const getOnboardStatus = async (req: Request, res: Response) => {
         }
 
         const realtor = await RealtorModel.findOne({ clerkUserId });
-
+        console.log(realtor);
         if (realtor) {
             return res.json({
                 isOnboarded: true
