@@ -5,7 +5,8 @@ import { CampaignModel } from "../models/campaing.model.js";
 import { LeadModel } from "../models/lead.model.js";
 import { sendMail, sendBatchMails } from "../services/mails.service.js";
 import { generateUnsubscribeToken } from "../utils/unsubscribeToken.js";
-
+import connectDB from "../db/db.ts";
+connectDB();
 import {
   basicTemplate,
   brandedTemplate,

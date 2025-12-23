@@ -45,6 +45,21 @@ export default function ComposeEmailPage() {
     const [loading, setLoading] = useState(true);
     const [isConfirmed, setIsConfirmed] = useState(false);
 
+    // Persist selected template style so EmailsListPage can read it when confirming
+    useEffect(() => {
+        try {
+            if (!id) return;
+            // Only persist when not confirmed (draft editing)
+            if (!isConfirmed && templateStyle) {
+                localStorage.setItem(`campaign_${id}_template`, templateStyle);
+                sessionStorage.setItem(`campaign_${id}_template`, templateStyle);
+            }
+        } catch (e) {
+            // ignore storage errors
+            console.warn('Failed to persist template style', e);
+        }
+    }, [templateStyle, id, isConfirmed]);
+
     useEffect(() => {
         const loadEmailData = async () => {
             try {

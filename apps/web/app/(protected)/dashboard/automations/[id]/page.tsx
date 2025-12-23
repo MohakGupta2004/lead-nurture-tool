@@ -86,7 +86,7 @@ export default function AutomationDetailsPage() {
                     }));
                     setEmails(confirmedEmails);
                     setHasEmails(true);
-                    setIsConfirmed(true);
+                    setIsConfirmed(false);
                 } else {
                     // No confirmed emails, check localStorage for drafts
                     const storedEmails = localStorage.getItem(`campaign_${id}_emails`);
@@ -126,7 +126,7 @@ export default function AutomationDetailsPage() {
         setIsGenerating(true);
         try {
             const token = await getToken();
-            const response = await api.post('/api/mail/generate', null, { headers: { Authorization: `Bearer ${token}` } });
+            const response = await api.post('/api/mail/generate', {campaignId: id}, { headers: { Authorization: `Bearer ${token}` } });
 
             if (response.data && response.data.mails) {
                 const emailsData = JSON.stringify(response.data.mails);

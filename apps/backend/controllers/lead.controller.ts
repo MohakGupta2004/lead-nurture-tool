@@ -178,3 +178,63 @@ export const createMultipleLeads = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to create leads" });
   }
 };
+
+
+export const editLead = async (req: Request, res: Response) => {
+  try {
+    const realtor = req.realtor;
+    const { leadId, name, email, phone, address } = req.body;
+
+    if (!realtor) {
+      return res.status(403).json({ error: "Realtor access required" });
+    }
+
+    const lead = await LeadModel.findOne({
+      _id: leadId,
+      realtorId: realtor._id,
+    });
+
+    if (!lead) {
+      return res.status(404).json({ error: "Lead not found" });
+    }
+
+    lead.name = name;
+    lead.email = email;
+    lead.phNo = phone;
+    lead.address = address;
+
+    await lead.save();
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error editing lead:", error);
+    res.status(500).json({ error: "Failed to edit lead" });
+  }
+};
+
+export const deleteLead = async (req: Request, res: Response) => {
+  try {
+    const realtor = req.realtor;
+    const { leadId } = req.body;
+
+    if (!realtor) {
+      return res.status(403).json({ error: "Realtor access required" });
+    }
+
+    const lead = await LeadModel.findOne({
+      _id: leadId,
+      realtorId: realtor._id,
+    });
+
+    if (!lead) {
+      return res.status(404).json({ error: "Lead not found" });
+    }
+
+    await lead.deleteOne();
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error deleting lead:", error);
+    res.status(500).json({ error: "Failed to delete lead" });
+  }
+};

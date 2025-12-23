@@ -10,6 +10,6 @@ router.get('/me', requireAuthApi, getCurrentUser);
 // Use special auth for onboarding (creates user if needed)
 router.post('/onboarding', requireAuthWithUserCreation, createOrUpdateRealtor);
 
-router.get('/onboard-status', requireAuthApi, getOnboardStatus);
+router.get('/onboard-status', requireAuthWithUserCreation, getOnboardStatus);
 
 export default router;

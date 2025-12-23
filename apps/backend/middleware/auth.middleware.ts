@@ -6,6 +6,9 @@ import { RealtorModel } from '../models/realtor.model';
 export const requireAuthApi = async (req: Request, res: Response, next: NextFunction) => {
     const auth = getAuth(req);
     
+    console.log('requireAuthApi middleware called');
+    console.log('User ID:', auth.userId);
+    
     if (!auth.userId) {
         return res.status(401).json({
             error: 'Unauthorized',

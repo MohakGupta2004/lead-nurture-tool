@@ -40,6 +40,7 @@ export default function EmailsListPage() {
     const [loading, setLoading] = useState(true);
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [isSending, setIsSending] = useState(false);
+    const [templateStyle, setTemplateStyle] = useState<string | null>(null);
 
     useEffect(() => {
         const checkStatusAndLoadEmails = async () => {
@@ -62,6 +63,7 @@ export default function EmailsListPage() {
                     }));
                     setEmails(confirmedEmails);
                     setIsConfirmed(true);
+                    setTemplateStyle(apiMail.templateStyle || null);
                     setLoading(false);
                     return;
                 }
@@ -75,6 +77,9 @@ export default function EmailsListPage() {
                 if (storedEmails) {
                     setEmails(JSON.parse(storedEmails));
                     setIsConfirmed(false);
+                    // Try to read the persisted template style
+                    const storedTemplate = localStorage.getItem(`campaign_${id}_template`) || sessionStorage.getItem(`campaign_${id}_template`);
+                    if (storedTemplate) setTemplateStyle(storedTemplate);
                 } else {
                     router.push(`/dashboard/automations/${id}`);
                 }
@@ -106,7 +111,8 @@ export default function EmailsListPage() {
 
             const confirmResponse = await api.post(`/api/mail/confirm`, {
                 campaignId: id,
-                mails: emails
+                mails: emails,
+                templateStyle: templateStyle || 'basic'
             }, { headers: { Authorization: `Bearer ${token}` } });
 
             if (confirmResponse.data.success) {

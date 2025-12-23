@@ -25,7 +25,8 @@ interface RealtorContext {
 
 export const generateAIMail = async (
   topic: string,
-  realtorContext: RealtorContext
+  realtorContext: RealtorContext,
+  city: string
 ): Promise<MailInterface> => {
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
@@ -134,6 +135,9 @@ export const generateAIMail = async (
 
               REALTOR CONTEXT:
               ${JSON.stringify(realtorContext)}
+
+              CITY for the leads:
+              ${city}
 
               ### User Example 1
               Topic:
