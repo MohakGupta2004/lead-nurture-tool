@@ -67,9 +67,11 @@ new Worker(
 
       const emailsToSend = validRecipients.map((recipient: string) => {
         const token = generateUnsubscribeToken(mail._id.toString(), recipient);
-        const unsubscribeUrl = `${process.env.BASE_URL}/api/mail/unsubscribe?token=${token}`;
+        const unsubscribeUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/mail/unsubscribe?token=${token}`;
 
         let html: string;
+        console.log("mail Template Style ", mail.templateStyle);
+        console.log("Realtor details for email", realtor);
         switch (mail.templateStyle) {
           case "branded":
             html = brandedTemplate(
