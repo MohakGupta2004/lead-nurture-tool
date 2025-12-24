@@ -11,6 +11,7 @@ import {
   modernTemplate,
 } from "../templates/templateHandler.js";
 
+// const DELAY_DAYS = 0.00035;
 const DELAY_DAYS = 5;
 const SECONDS_PER_DAY = 24 * 60 * 60;
 
