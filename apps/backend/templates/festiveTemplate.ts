@@ -1,26 +1,21 @@
+import type { Realtor } from "./RealtorInterface";
 
 interface FestiveTemplateProps {
-    body: string;
-    subject: string;
-    realtor: {
-        username?: string;
-        brokerageName?: string;
-        professionalEmail?: string;
-        phNo?: string;
-        profilePicture?: string;
-    };
-    unsubscribeUrl: string;
+  body: string;
+  subject: string;
+  realtor: Realtor;
+  unsubscribeUrl: string;
 }
 
 export const festiveTemplateProvider = ({
-    body,
-    subject,
-    realtor,
-    unsubscribeUrl,
+  body,
+  subject,
+  realtor,
+  unsubscribeUrl,
 }: FestiveTemplateProps) => {
-    const formattedBody = body.replace(/\n/g, '<br/>');
+  const formattedBody = body.replace(/\n/g, '<br/>');
 
-    return `
+  return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -123,7 +118,7 @@ export const festiveTemplateProvider = ({
 
     <div class="footer">
       <div class="realtor-info">
-        <div class="realtor-name">${realtor.username || 'Your Realtor'}</div>
+        <div class="realtor-name">${realtor.firstName + " " + realtor.lastName || 'Your Realtor'}</div>
         ${realtor.brokerageName ? `<div class="realtor-brokerage">${realtor.brokerageName}</div>` : ''}
       </div>
       
@@ -133,7 +128,7 @@ export const festiveTemplateProvider = ({
       </div>
 
       <div class="unsubscribe">
-        <p>You received this email because you are subscribed to updates from ${realtor.username || 'us'}.</p>
+        <p>You received this email because you are subscribed to updates from ${realtor.firstName + " " + realtor.lastName || 'us'}.</p>
         <a href="${unsubscribeUrl}">Unsubscribe</a>
       </div>
     </div>

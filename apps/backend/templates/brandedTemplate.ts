@@ -135,7 +135,7 @@ export const brandedTemplateProvider = (
             ${realtor.profileImageUrl ? `<img src="${realtor.profileImageUrl}" alt="Profile" class="profile-img"/>` : ''}
             <div>
                 <p style="font-family: 'Libre Franklin', sans-serif; margin: 0 0 4px 0; font-weight: 700; color: #0f172a; font-size: 16px;">${realtor.brokerageName ?? ""}</p>
-                <p style="margin: 0 0 4px 0; font-size: 14px; color: #334155;">${realtor.professionalEmail ?? ""}</p>
+                <p style="margin: 0 0 4px 0; font-size: 14px; color: #334155;">${realtor.firstName + " " + realtor.lastName}</p>
                 <p style="margin: 0; font-size: 14px; color: #64748b;">${realtor.phNo ?? ""}</p>
             </div>
         </div>

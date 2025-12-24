@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { api } from "@/lib/api";
 import { useAuth } from "@clerk/nextjs";
-
+import { City } from 'country-state-city'
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -93,6 +93,22 @@ export function CreateCampaignModal() {
                                     <SelectItem value="reengage">Re-engage Cold Leads</SelectItem>
                                     <SelectItem value="promote">Promote Listing</SelectItem>
                                     <SelectItem value="event">Event Invitation</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="city">City</Label>
+                            <Select name="city" required>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select city" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {City.getCitiesOfCountry('CA')?.map((city) => (
+
+                                        <SelectItem key={`${city.name}-${city.stateCode}`} value={city.name}>
+                                            {city.name}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>

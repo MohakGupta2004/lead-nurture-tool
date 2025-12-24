@@ -27,6 +27,30 @@ export default function Step1Personal() {
 
             <div className="space-y-4">
                 <div className="space-y-2">
+                    <div className="flex gap-2 w-full">
+                        <div className="w-1/2">
+                            <Label htmlFor='firstname' className='text-zinc-300 pb-2'>First Name</Label>
+                            <Input
+                                id="firstname"
+                                type="text"
+                                placeholder="John"
+                                value={data.firstName}
+                                onChange={(e) => updateData({ firstName: e.target.value })}
+                                className="bg-zinc-900 border-zinc-800 text-white focus:ring-yellow-500 focus:border-yellow-500"
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <Label htmlFor='lastname' className='text-zinc-300 pb-2'>Last Name</Label>
+                            <Input
+                                id="lastname"
+                                type="text"
+                                placeholder="Doe"
+                                value={data.lastName}
+                                onChange={(e) => updateData({ lastName: e.target.value })}
+                                className="bg-zinc-900 border-zinc-800 text-white focus:ring-yellow-500 focus:border-yellow-500"
+                            />
+                        </div>
+                    </div>
                     <Label htmlFor="phone" className="text-zinc-300">Phone Number</Label>
                     <Input
                         id="phone"

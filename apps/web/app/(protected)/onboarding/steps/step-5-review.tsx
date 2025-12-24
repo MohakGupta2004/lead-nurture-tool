@@ -60,6 +60,8 @@ export default function Step5Review() {
             </div>
 
             <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
+                <ReviewItem label="First Name" value={data.firstName} step={1} />
+                <ReviewItem label="Last Name" value={data.lastName} step={1} />
                 <ReviewItem label="Phone" value={data.phoneNumber} step={1} />
                 <ReviewItem label="Email" value={data.professionalEmail} step={1} />
                 <ReviewItem label="Years in Business" value={`${data.yearsInBusiness} years`} step={1} />

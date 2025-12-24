@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { useAuth } from "@clerk/nextjs";
+import { Badge } from "@/components/ui/badge";
 
 interface EmailData {
     mail: {
@@ -100,7 +101,7 @@ export default function ComposeEmailPage() {
                         setIsConfirmed(false);
                     } else {
                         toast.error("Email not found");
-                        router.push(`/dashboard/automations/${id}/emails`);
+                        router.push(`/dashboard/automations/${id}`);
                     }
                 } else {
                     router.push(`/dashboard/automations/${id}`);
@@ -186,7 +187,7 @@ export default function ComposeEmailPage() {
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                     <Button asChild variant="ghost" size="icon">
-                        <Link href={`/dashboard/automations/${id}/emails`}>
+                        <Link href={`/dashboard/automations/${id}`}>
                             <ArrowLeft className="h-4 w-4" />
                         </Link>
                     </Button>

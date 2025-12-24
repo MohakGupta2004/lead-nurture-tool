@@ -152,7 +152,7 @@ export const professionalTemplateProvider = (
         <div class="agent-section">
             ${realtor.profileImageUrl ? `<img src="${realtor.profileImageUrl}" alt="Agent" class="agent-profile-img"/>` : ''}
             <div class="agent-details">
-                <div style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 20px; margin-bottom: 4px;">Your Realtor</div>
+                <div style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 20px; margin-bottom: 4px;">${realtor.firstName + " " + realtor.lastName}</div>
                 <div style="font-size: 14px; opacity: 0.9; margin-bottom: 12px;">${realtor.brokerageName ?? 'Real Estate Agent'}</div>
                 <div style="font-size: 13px; line-height: 1.6;">
                     ${realtor.phNo ? `<div>${realtor.phNo}</div>` : ''}

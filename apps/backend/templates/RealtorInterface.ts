@@ -1,5 +1,7 @@
 export interface Realtor {
   clerkUserId: string;
+  firstName: string;
+  lastName: string;
 
   brokerageName?: string | null;
   professionalEmail?: string | null;

@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const RealtorSchema = new mongoose.Schema(
     {
         clerkUserId: { type: String, required: true, unique: true },
+        firstName: { type: String, required: true },
+        lastName: { type: String, required: true },
         phNo: { type: String, required: false },
         licenseNumber: { type: String, required: false },
         address: { type: String, required: false },

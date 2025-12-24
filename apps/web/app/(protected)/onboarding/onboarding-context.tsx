@@ -4,6 +4,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react'
 
 export interface OnboardingData {
     // Step 1: Personal Information
+    firstName: string
+    lastName: string
     businessName: string
     licenseNumber: string
     phoneNumber: string
@@ -31,6 +33,8 @@ interface OnboardingContextType {
 }
 
 const defaultData: OnboardingData = {
+    firstName: '',
+    lastName: '',
     businessName: '',
     licenseNumber: '',
     phoneNumber: '',

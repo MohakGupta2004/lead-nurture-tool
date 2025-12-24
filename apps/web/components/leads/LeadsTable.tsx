@@ -99,7 +99,7 @@ export function LeadsTable({ campaigns }: { campaigns: { id: string; name: strin
                 </TableHeader>
                 <TableBody>
                     {leads.map((lead) => (
-                        <TableRow key={lead.id}>
+                        <TableRow key={lead.email}>
                             <TableCell className="font-medium">{lead.name}</TableCell>
                             <TableCell>{lead.email}</TableCell>
                             <TableCell>{lead.phNo}</TableCell>

@@ -167,7 +167,7 @@ export const modernTemplateProvider = (subject: string, body: string, realtor: R
             <div class="signature-section">
                 ${realtor.profileImageUrl ? `<img src="${realtor.profileImageUrl}" alt="Profile" class="profile-img"/>` : ''}
                 <div>
-                    <p style="font-family: 'Outfit', sans-serif; margin: 0 0 4px 0; font-weight: 700; color: #111827; font-size: 18px; letter-spacing: -0.01em;">${realtor.professionalEmail ?? 'Your Realtor'}</p>
+                    <p style="font-family: 'Outfit', sans-serif; margin: 0 0 4px 0; font-weight: 700; color: #111827; font-size: 18px; letter-spacing: -0.01em;">${realtor.firstName + " " + realtor.lastName || 'Your Realtor'}</p>
                     <p style="margin: 0; color: #6b7280; font-size: 14px;">${realtor.phNo ?? ''}</p>
                 </div>
             </div>

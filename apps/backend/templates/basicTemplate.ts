@@ -87,7 +87,7 @@ export const basicTemplateProvider = (
         <div class="signature">
             ${realtor.profileImageUrl ? `<img src="${realtor.profileImageUrl}" alt="Profile" class="profile-img"/>` : ''}
             <div>
-                <p style="margin: 0 0 2px 0; font-weight: 700; color: #111827;">${realtor.professionalEmail ?? "Your Realtor"}</p>
+                <p style="margin: 0 0 2px 0; font-weight: 700; color: #111827;">${realtor.firstName + " " + realtor.lastName}</p>
                 <p style="margin: 0; font-size: 14px; color: #6b7280;">${realtor.phNo ?? ""}</p>
             </div>
         </div>

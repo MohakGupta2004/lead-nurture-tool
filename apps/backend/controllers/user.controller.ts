@@ -94,6 +94,8 @@ export const createOrUpdateRealtor = async (req: Request, res: Response) => {
     }
 
     const {
+      firstName,
+      lastName,
       businessName,
       licenseNumber,
       phoneNumber,
@@ -120,6 +122,8 @@ export const createOrUpdateRealtor = async (req: Request, res: Response) => {
 
     if (realtor) {
       Object.assign(realtor, {
+        firstName,
+        lastName,
         phNo: phoneNumber || phNo,
         brokerageName: businessName || brokerageName,
         licenseNumber: licenseNumber,
@@ -139,6 +143,8 @@ export const createOrUpdateRealtor = async (req: Request, res: Response) => {
     } else {
       realtor = new RealtorModel({
         clerkUserId,
+        firstName,
+        lastName,
         phNo: phoneNumber || phNo,
         brokerageName: businessName || brokerageName,
         licenseNumber: licenseNumber,

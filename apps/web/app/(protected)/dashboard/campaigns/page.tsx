@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { api } from "@/lib/api";
 import { auth } from "@clerk/nextjs/server";
-
 type Campaign = {
     id: string;
     name: string;
     totalLeads: number;
     createdAt: string;
+    city: string;
     status: string;
     objective: string;
     targetPersona: string;
