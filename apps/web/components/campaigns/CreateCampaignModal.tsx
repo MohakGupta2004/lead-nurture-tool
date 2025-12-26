@@ -103,9 +103,8 @@ export function CreateCampaignModal() {
                                     <SelectValue placeholder="Select city" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {City.getCitiesOfCountry('CA')?.map((city) => (
-
-                                        <SelectItem key={`${city.name}-${city.stateCode}`} value={city.name}>
+                                    {City.getCitiesOfCountry('CA')?.map((city, index) => (
+                                        <SelectItem key={index} value={city.name}>
                                             {city.name}
                                         </SelectItem>
                                     ))}

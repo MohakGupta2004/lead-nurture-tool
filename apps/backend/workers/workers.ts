@@ -6,6 +6,8 @@ import { LeadModel } from "../models/lead.model.js";
 import { sendMail, sendBatchMails } from "../services/mails.service.js";
 import { generateUnsubscribeToken } from "../utils/unsubscribeToken.js";
 import connectDB from "../db/db.ts";
+import dotenv from "dotenv";
+dotenv.config();
 connectDB();
 import {
   basicTemplate,
@@ -13,12 +15,6 @@ import {
   professionalTemplate,
   modernTemplate,
 } from "../templates/templateHandler.ts";
-
-import dotenv from "dotenv";
-import connectDB from "../db/db";
-
-dotenv.config();
-connectDB();
 
 
 console.log("Email worker starting...");

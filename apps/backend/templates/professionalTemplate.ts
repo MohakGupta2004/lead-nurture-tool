@@ -21,152 +21,87 @@ export const professionalTemplateProvider = (
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${subject}</title>
-    <!-- Import Premium Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'DM Sans', Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #4b5563;
-            margin: 0;
-            padding: 0;
-            background-color: #f3f4f6;
-        }
-        .container {
-            max-width: 600px;
-            margin: 40px auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-        }
-        .top-bar {
-            background-color: #0e3f4f; /* Dark Teal */
-            padding: 12px 40px;
-            text-align: center;
-            font-size: 12px;
-            color: #e5e7eb;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-        }
-        .header {
-            padding: 48px 40px 24px 40px;
-            text-align: center;
-        }
-        .logo {
-            max-height: 70px;
-            width: auto;
-            display: block;
-            margin: 0 auto;
-        }
-        .hero-text {
-            font-family: 'Outfit', sans-serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: #111827;
-            margin: 0 0 24px 0;
-            line-height: 1.2;
-            text-align: center;
-        }
-        .content {
-            padding: 0 48px 48px 48px;
-            font-size: 16px;
-            color: #4b5563;
-        }
-        .button {
-            display: inline-block;
-            background-color: #0e3f4f; /* Dark Teal */
-            color: #ffffff;
-            padding: 16px 32px;
-            text-decoration: none;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 15px;
-            border-radius: 50px; /* Pill shape */
-            margin-top: 32px;
-            box-shadow: 0 4px 6px -1px rgba(14, 63, 79, 0.2);
-            transition: transform 0.1s;
-        }
-        .agent-section {
-            margin: 0 48px 48px 48px;
-            background-color: #0e3f4f; /* Dark Teal */
-            border-radius: 16px;
-            padding: 32px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        .agent-profile-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 3px solid #ffffff;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-        .agent-details {
-            flex: 1;
-        }
-        .footer {
-            background-color: #f9fafb;
-            padding: 32px 40px;
-            text-align: center;
-            border-top: 1px solid #e5e7eb;
-            color: #9ca3af;
-            font-size: 13px;
-        }
-        .footer a {
-            color: #6b7280;
-            text-decoration: underline;
-        }
-        @media (max-width: 600px) {
-            .container { margin: 0; border-radius: 0; }
-            .content, .header, .agent-section { padding: 32px 24px; margin: 0; }
-            .agent-section { margin: 0 24px 32px 24px; flex-direction: column; text-align: center; }
-            .hero-text { font-size: 28px; }
-        }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <div class="top-bar">
-            ${realtor.brokerageName ? realtor.brokerageName.toUpperCase() : 'REAL ESTATE'}
-        </div>
+<body style="margin:0; padding:0; background-color:#f3f4f6; font-family: 'DM Sans', Helvetica, Arial, sans-serif; color:#4b5563;">
 
-        <div class="header">
-            ${realtor.brandLogoUrl ? `<img src="${realtor.brandLogoUrl}" alt="Logo" class="logo"/>` : ''}
-        </div>
+<!-- Wrapper Table -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f3f4f6">
+    <tr>
+        <td align="center" style="padding:20px 0;">
+            <!-- Main Container -->
+            <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="border-radius:12px; overflow:hidden;">
+                
+                <!-- Top Bar -->
+                <tr>
+                    <td align="center" bgcolor="#0e3f4f" style="padding:12px 20px; font-size:12px; color:#e5e7eb; font-weight:500; letter-spacing:0.05em;">
+                        ${realtor.brokerageName ? realtor.brokerageName.toUpperCase() : 'REAL ESTATE'}
+                    </td>
+                </tr>
 
-        <div class="content">
-            <h1 class="hero-text">${subject}</h1>
-            
-            ${body}
-            
-            ${realtor.calendlyLink ? `<div style="text-align: center;"><a href="${realtor.calendlyLink}" class="button">Schedule a Visit</a></div>` : ''}
-        </div>
+                <!-- Header / Logo -->
+                <tr>
+                    <td align="center" style="padding:40px 20px 20px 20px;">
+                        ${realtor.brandLogoUrl ? `<img src="${realtor.brandLogoUrl}" alt="Logo" width="150" style="display:block; max-width:150px; height:auto;" />` : ''}
+                    </td>
+                </tr>
 
-        <div class="agent-section">
-            ${realtor.profileImageUrl ? `<img src="${realtor.profileImageUrl}" alt="Agent" class="agent-profile-img"/>` : ''}
-            <div class="agent-details">
-                <div style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 20px; margin-bottom: 4px;">${realtor.firstName + " " + realtor.lastName}</div>
-                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 12px;">${realtor.brokerageName ?? 'Real Estate Agent'}</div>
-                <div style="font-size: 13px; line-height: 1.6;">
-                    ${realtor.phNo ? `<div>${realtor.phNo}</div>` : ''}
-                    ${realtor.professionalEmail ? `<div>${realtor.professionalEmail}</div>` : ''}
-                </div>
-            </div>
-        </div>
+                <!-- Hero / Subject -->
+                <tr>
+                    <td align="center" style="padding:20px 40px 20px 40px;">
+                        <h1 style="margin:0; font-family:'Outfit', sans-serif; font-size:28px; font-weight:700; line-height:1.2; color:#111827;">${subject}</h1>
+                    </td>
+                </tr>
 
-        <div class="footer">
-            <p style="margin: 0 0 16px 0;">
-                © ${new Date().getFullYear()} ${realtor.brokerageName ?? 'All rights reserved'}.
-            </p>
-            <a href="${unsubscribeUrl}">Unsubscribe</a>
-        </div>
-    </div>
+                <!-- Body Content -->
+                <tr>
+                    <td style="padding:0 40px 40px 40px; font-size:16px; line-height:1.6; color:#4b5563;">
+                        <p>${body}</p>
+                        ${realtor.calendlyLink ? `
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:20px;">
+                            <tr>
+                                <td align="center">
+                                    <a href="${realtor.calendlyLink}" style="display:inline-block; padding:16px 32px; background-color:#0e3f4f; color:#ffffff; text-decoration:none; font-family:'Outfit', sans-serif; font-weight:600; font-size:15px; border-radius:50px;">Schedule a Visit</a>
+                                </td>
+                            </tr>
+                        </table>` : ''}
+                    </td>
+                </tr>
+
+                <!-- Agent Section -->
+                <tr>
+                    <td bgcolor="#0e3f4f" style="padding:20px 40px; border-radius:0 0 12px 12px;">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                ${realtor.profileImageUrl ? `
+                                <td width="80" valign="top" style="padding-right:20px;">
+                                    <img src="${realtor.profileImageUrl}" alt="Agent" width="80" height="80" style="border-radius:50%; display:block; border:3px solid #ffffff;"/>
+                                </td>` : ''}
+                                <td valign="top" style="color:#ffffff; font-size:14px; line-height:1.5;">
+                                    <div style="font-family:'Outfit', sans-serif; font-weight:700; font-size:18px; margin-bottom:4px;">${realtor.firstName + ' ' + realtor.lastName}</div>
+                                    <div style="opacity:0.9; margin-bottom:8px;">${realtor.brokerageName ?? 'Real Estate Agent'}</div>
+                                    <div>
+                                        ${realtor.phNo ? `<div>${realtor.phNo}</div>` : ''}
+                                        ${realtor.professionalEmail ? `<div>${realtor.professionalEmail}</div>` : ''}
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td align="center" bgcolor="#f9fafb" style="padding:20px 40px; font-size:13px; color:#9ca3af; border-top:1px solid #e5e7eb;">
+                        <p style="margin:0 0 8px 0;">© ${new Date().getFullYear()} ${realtor.brokerageName ?? 'All rights reserved'}.</p>
+                        <a href="${unsubscribeUrl}" style="color:#6b7280; text-decoration:underline;">Unsubscribe</a>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+
 </body>
-</html>`;
+</html>
+`;

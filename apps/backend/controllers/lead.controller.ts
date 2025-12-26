@@ -226,6 +226,13 @@ export const deleteLead = async (req: Request, res: Response) => {
       realtorId: realtor._id,
     });
 
+    if (lead) {
+      await CampaignModel.updateOne(
+        { _id: lead.campaignId },
+        { $pull: { leads: lead._id } }
+      );
+    }
+
     if (!lead) {
       return res.status(404).json({ error: "Lead not found" });
     }
