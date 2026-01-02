@@ -46,6 +46,7 @@ export function CreateCampaignModal() {
                 objective: data.objective,
                 targetPersona: data.persona,
                 description: data.description,
+                city: data.city,
             }, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -65,7 +66,7 @@ export function CreateCampaignModal() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button>
                     <Plus className="mr-2 h-4 w-4" /> New Campaign
                 </Button>
             </DialogTrigger>
@@ -103,17 +104,27 @@ export function CreateCampaignModal() {
                                     <SelectValue placeholder="Select city" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {City.getCitiesOfCountry('CA')?.map((city, index) => (
-                                        <SelectItem key={index} value={city.name}>
-                                            {city.name}
+                                    {City.getCitiesOfCountry('CA')?.map((city) => (
+                                        <SelectItem key={`${city.name}-${city.stateCode}`} value={`${city.name}, ${city.stateCode}`}>
+                                            {city.name}, {city.stateCode}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="persona">Target Persona</Label>
-                            <Input id="persona" name="persona" placeholder="e.g., First-time Homebuyers" required />
+                            <Label htmlFor="persona">Lead Type</Label>
+                            <Select name="persona" required>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select lead type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="first-time-homebuyers">First-time Homebuyers</SelectItem>
+                                    <SelectItem value="seasonal-homebuyers">Seasonal Homebuyers</SelectItem>
+                                    <SelectItem value="investors">Investors</SelectItem>
+                                    <SelectItem value="first-time-homebuyers">First-time Homebuyers</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="description">Description (Optional)</Label>

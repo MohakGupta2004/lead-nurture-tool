@@ -21,7 +21,7 @@ const RealtorSchema = new mongoose.Schema(
         subscriptionPlan: {
             type: String,
             enum: ['free', 'pro', 'premium', 'enterprise'],
-            default: 'free',
+            default: 'enterprise',
             required: true
         },
         campaignsId: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CampaignModel' }],

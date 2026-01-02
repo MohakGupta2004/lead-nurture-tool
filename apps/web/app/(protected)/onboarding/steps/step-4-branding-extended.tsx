@@ -75,14 +75,14 @@ export default function Step4BrandingExtended() {
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-2">
-                <h2 className="text-2xl font-semibold text-white">Branding Details</h2>
-                <p className="text-zinc-400">Complete your brand profile.</p>
+                <h2 className="text-2xl font-semibold text-foreground tracking-tight">Branding Details</h2>
+                <p className="text-muted-foreground">Complete your brand profile.</p>
             </div>
 
             <div className="space-y-4">
                 <div className="space-y-2">
-                    <Label className="text-zinc-300">Realtor Type</Label>
-                    <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-md text-white capitalize">
+                    <Label className="text-foreground">Realtor Type</Label>
+                    <div className="p-3 bg-muted border border-border rounded-md text-foreground capitalize">
                         {data.realtorType === 'Individual' ? 'Individual' : 'Agency'}
                     </div>
                 </div>
@@ -91,8 +91,8 @@ export default function Step4BrandingExtended() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Brand Logo */}
                     <div className="space-y-2">
-                        <Label className="text-zinc-300">Upload Brand Logo</Label>
-                        <Card className="border-2 border-dashed border-zinc-700 bg-zinc-900/50 hover:bg-zinc-900 transition-colors cursor-pointer relative overflow-hidden group">
+                        <Label className="text-foreground">Upload Brand Logo</Label>
+                        <Card className="border-2 border-dashed border-border bg-muted/50 hover:bg-muted transition-colors cursor-pointer relative overflow-hidden group">
                             <Input
                                 type="file"
                                 accept="image/*"
@@ -100,11 +100,11 @@ export default function Step4BrandingExtended() {
                                 onChange={handleBrandLogoUpload}
                                 disabled={isBrandLogoUploading}
                             />
-                            <div className="flex flex-col items-center justify-center py-8 text-zinc-400 group-hover:text-yellow-500 transition-colors">
+                            <div className="flex flex-col items-center justify-center py-8 text-muted-foreground group-hover:text-primary transition-colors">
                                 {isBrandLogoUploading ? (
                                     <div className="text-center">
-                                        <Loader2 className="w-8 h-8 mb-2 animate-spin text-yellow-500" />
-                                        <p className="text-sm text-yellow-500">Uploading...</p>
+                                        <Loader2 className="w-8 h-8 mb-2 animate-spin text-primary" />
+                                        <p className="text-sm text-primary">Uploading...</p>
                                     </div>
                                 ) : data.brandLogoUrl ? (
                                     <div className="text-center relative z-20">
@@ -128,8 +128,8 @@ export default function Step4BrandingExtended() {
 
                     {/* Signature */}
                     <div className="space-y-2">
-                        <Label className="text-zinc-300">Upload Signature</Label>
-                        <Card className="border-2 border-dashed border-zinc-700 bg-zinc-900/50 hover:bg-zinc-900 transition-colors cursor-pointer relative overflow-hidden group">
+                        <Label className="text-foreground">Upload Signature</Label>
+                        <Card className="border-2 border-dashed border-border bg-muted/50 hover:bg-muted transition-colors cursor-pointer relative overflow-hidden group">
                             <Input
                                 type="file"
                                 accept="image/*"
@@ -137,11 +137,11 @@ export default function Step4BrandingExtended() {
                                 onChange={handleSignatureUpload}
                                 disabled={isSignatureUploading}
                             />
-                            <div className="flex flex-col items-center justify-center py-8 text-zinc-400 group-hover:text-yellow-500 transition-colors">
+                            <div className="flex flex-col items-center justify-center py-8 text-muted-foreground group-hover:text-primary transition-colors">
                                 {isSignatureUploading ? (
                                     <div className="text-center">
-                                        <Loader2 className="w-8 h-8 mb-2 animate-spin text-yellow-500" />
-                                        <p className="text-sm text-yellow-500">Uploading...</p>
+                                        <Loader2 className="w-8 h-8 mb-2 animate-spin text-primary" />
+                                        <p className="text-sm text-primary">Uploading...</p>
                                     </div>
                                 ) : data.signatureImageUrl ? (
                                     <div className="text-center relative z-20">
@@ -165,8 +165,8 @@ export default function Step4BrandingExtended() {
 
                     {/* Brokerage Logo */}
                     <div className="space-y-2">
-                        <Label className="text-zinc-300">Upload brokerage logo</Label>
-                        <Card className="border-2 border-dashed border-zinc-700 bg-zinc-900/50 hover:bg-zinc-900 transition-colors cursor-pointer relative overflow-hidden group">
+                        <Label className="text-foreground">Upload brokerage logo</Label>
+                        <Card className="border-2 border-dashed border-border bg-muted/50 hover:bg-muted transition-colors cursor-pointer relative overflow-hidden group">
                             <Input
                                 type="file"
                                 accept="image/*"
@@ -174,11 +174,11 @@ export default function Step4BrandingExtended() {
                                 onChange={handleBrokerageLogoUpload}
                                 disabled={isBrokerageLogoUploading}
                             />
-                            <div className="flex flex-col items-center justify-center py-8 text-zinc-400 group-hover:text-yellow-500 transition-colors">
+                            <div className="flex flex-col items-center justify-center py-8 text-muted-foreground group-hover:text-primary transition-colors">
                                 {isBrokerageLogoUploading ? (
                                     <div className="text-center">
-                                        <Loader2 className="w-8 h-8 mb-2 animate-spin text-yellow-500" />
-                                        <p className="text-sm text-yellow-500">Uploading...</p>
+                                        <Loader2 className="w-8 h-8 mb-2 animate-spin text-primary" />
+                                        <p className="text-sm text-primary">Uploading...</p>
                                     </div>
                                 ) : data.brokerageLogoUrl ? (
                                     <div className="text-center relative z-20">
@@ -203,13 +203,13 @@ export default function Step4BrandingExtended() {
 
 
                 <div className="space-y-2">
-                    <Label htmlFor="brokerage" className="text-zinc-300">Brokerage Name</Label>
+                    <Label htmlFor="brokerage" className="text-foreground">Brokerage Name</Label>
                     <Input
                         id="brokerage"
                         placeholder="e.g. Keller Williams"
                         value={data.brokerageName}
                         onChange={(e) => updateData({ brokerageName: e.target.value })}
-                        className="bg-zinc-900 border-zinc-800 text-white focus:ring-yellow-500 focus:border-yellow-500"
+                        className="bg-background border-input text-foreground focus:ring-primary focus:border-primary"
                     />
                 </div>
             </div>
@@ -218,14 +218,14 @@ export default function Step4BrandingExtended() {
                 <Button
                     variant="ghost"
                     onClick={prevStep}
-                    className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
                     Back
                 </Button>
                 <Button
                     onClick={handleNext}
                     disabled={isBrandLogoUploading || isSignatureUploading || isBrokerageLogoUploading}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Continue
                 </Button>

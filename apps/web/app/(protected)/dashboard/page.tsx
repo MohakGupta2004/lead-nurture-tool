@@ -6,7 +6,7 @@ import { BarChart3 } from "lucide-react";
 export default function DashboardPage() {
     return (
         <div className="space-y-8">
-            <div>
+            <div className="flex flex-col space-y-2">
                 <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
                 {/* TODO: Take this from Clerk */}
                 <p className="text-muted-foreground">Welcome back, Mohak Gupta!</p>
@@ -16,7 +16,7 @@ export default function DashboardPage() {
 
             <StatsCards />
 
-            <Card>
+            <Card className="overflow-hidden border-none shadow-sm ring-1 ring-black/5">
                 <CardHeader>
                     <CardTitle className="text-lg font-medium">Campaign Performance</CardTitle>
                     <p className="text-sm text-muted-foreground">Last 30 days</p>

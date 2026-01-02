@@ -2,7 +2,6 @@ import { CreateCampaignModal } from "@/components/campaigns/CreateCampaignModal"
 import { CampaignCard } from "@/components/campaigns/CampaignCard";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
-import { api } from "@/lib/api";
 import { auth } from "@clerk/nextjs/server";
 type Campaign = {
     id: string;
@@ -23,12 +22,16 @@ export default async function CampaignsPage() {
     let campaigns: Campaign[] = [];
 
     try {
-        const response = await api.get('/api/campaigns/all', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/campaigns/all`, {
             headers: {
                 "Authorization": `Bearer ${token}`
-            }
+            },
+            cache: 'no-store'
         });
-        campaigns = response.data;
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        campaigns = await response.json();
     } catch (error) {
         console.error("Failed to fetch campaigns", error);
     }
@@ -43,7 +46,7 @@ export default async function CampaignsPage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button variant="secondary" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                    <Button>
                         <CheckCircle2 className="mr-2 h-4 w-4" /> Mark as Done & Next
                     </Button>
                     <CreateCampaignModal />

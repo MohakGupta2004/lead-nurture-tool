@@ -5,6 +5,7 @@ interface FestiveTemplateProps {
   subject: string;
   realtor: Realtor;
   unsubscribeUrl: string;
+  leadName?: string;
 }
 
 export const festiveTemplateProvider = ({
@@ -12,6 +13,7 @@ export const festiveTemplateProvider = ({
   subject,
   realtor,
   unsubscribeUrl,
+  leadName,
 }: FestiveTemplateProps) => {
   const formattedBody = body.replace(/\n/g, '<br/>');
 
@@ -111,15 +113,29 @@ export const festiveTemplateProvider = ({
     </div>
     
     <div class="content">
+      <!-- Greeting -->
+      <p style="margin: 0 0 20px 0; font-size: 16px; font-weight: 600;">Hi ${leadName || "there"},</p>
+      
       <div class="message">
         ${formattedBody}
       </div>
     </div>
 
     <div class="footer">
-      <div class="realtor-info">
-        <div class="realtor-name">${realtor.firstName + " " + realtor.lastName || 'Your Realtor'}</div>
-        ${realtor.brokerageName ? `<div class="realtor-brokerage">${realtor.brokerageName}</div>` : ''}
+      <div class="realtor-info" style="margin-bottom: 24px; text-align: center;">
+        ${realtor.profileImageUrl ? `
+        <div style="margin-bottom: 16px;">
+          <img src="${realtor.profileImageUrl}" alt="Realtor" style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid #d4af37; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); display: inline-block;" />
+        </div>` : ''}
+        <div class="realtor-name" style="font-weight: bold; color: #2c3e50; font-size: 20px; margin-bottom: 4px;">${realtor.firstName + " " + realtor.lastName || 'Your Realtor'}</div>
+        ${realtor.brokerageName ? `<div class="realtor-brokerage" style="color: #7f8c8d; font-size: 16px; margin-bottom: 12px;">${realtor.brokerageName}</div>` : ''}
+        ${realtor.markets && realtor.markets.length > 0 ? `
+        <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #e0e0e0;">
+          <div style="font-size: 12px; color: #95a5a6; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Celebrating with clients in</div>
+          <div style="color: #d4af37; font-weight: 600; font-size: 14px;">
+            🎉 ${realtor.markets.join(' • ')}
+          </div>
+        </div>` : ''}
       </div>
       
       <div class="contact-info">

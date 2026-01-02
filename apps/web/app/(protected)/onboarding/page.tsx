@@ -45,24 +45,24 @@ function OnboardingContent() {
     }, [])
 
     return (
-        <div className="min-h-screen bg-black flex items-center justify-center p-4">
+        <div className="min-h-screen flex items-center justify-center p-4">
             {loading ? <div className="w-full max-w-xl">
                 {/* Progress Header */}
                 <div className="flex flex-col items-center justify-center h-64">
-                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-yellow-500"></div>
-                    <p className="mt-4 text-zinc-400 text-lg">Loading...</p>
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
+                    <p className="mt-4 text-muted-foreground text-lg">Loading...</p>
                 </div>
 
             </div> : <div className="w-full max-w-xl">
                 <div className="mb-8">
-                    <p className="text-zinc-500 text-sm font-medium mb-2 uppercase tracking-wider">Step {currentStep} of {totalSteps}</p>
+                    <p className="text-muted-foreground text-sm font-medium mb-2 uppercase tracking-wider">Step {currentStep} of {totalSteps}</p>
 
                     {/* Progress Bar */}
                     <div className="flex gap-2 mb-8">
                         {Array.from({ length: totalSteps }).map((_, i) => (
                             <div
                                 key={i}
-                                className={`h-1 flex-1 rounded-full transition-all duration-500 ${i + 1 <= currentStep ? 'bg-yellow-500' : 'bg-zinc-800'
+                                className={`h-1 flex-1 rounded-full transition-all duration-500 ${i + 1 <= currentStep ? 'bg-primary' : 'bg-muted'
                                     }`}
                             />
                         ))}
@@ -70,7 +70,7 @@ function OnboardingContent() {
                 </div>
 
                 {/* Card Container */}
-                <div className="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 md:p-8 shadow-2xl shadow-black/50">
+                <div className="bg-card rounded-xl border-none p-6 md:p-8 shadow-sm ring-1 ring-black/5">
                     {renderStep()}
                 </div>
             </div>}

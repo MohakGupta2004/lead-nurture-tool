@@ -83,7 +83,7 @@ export function CampaignCard({ campaign }: { campaign: Campaign }) {
 
 
     return (
-        <Card className="group relative overflow-hidden transition-all hover:border-primary/50">
+        <Card className="group relative overflow-hidden border-none shadow-sm ring-1 ring-black/5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
             <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
                 <Button variant="destructive" size="icon" className="h-8 w-8" onClick={deleteCampaign}>
                     <Trash2 className="h-4 w-4" />

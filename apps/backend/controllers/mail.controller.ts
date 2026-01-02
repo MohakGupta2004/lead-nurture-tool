@@ -32,16 +32,18 @@ const generateEmailPreview = (
   templateStyle: string,
   realtor: any
 ): string => {
+  const previewLeadName = "leadName"; // Placeholder for preview
+  
   switch (templateStyle?.toLowerCase()) {
     case "branded":
-      return brandedTemplate(subject, body, realtor, "#");
+      return brandedTemplate(subject, body, realtor, "#", previewLeadName);
     case "professional":
-      return professionalTemplate(subject, body, realtor, "#");
+      return professionalTemplate(subject, body, realtor, "#", previewLeadName);
     case "modern":
-      return modernTemplate(subject, body, realtor, "#");
+      return modernTemplate(subject, body, realtor, "#", previewLeadName);
     case "basic":
     default:
-      return basicTemplate(subject, body, realtor, "#");
+      return basicTemplate(subject, body, realtor, "#", previewLeadName);
   }
 };
 
@@ -233,7 +235,7 @@ export const getMailPreview = async (req: Request, res: Response) => {
         upgradeRequired: true,
       });
     }
-
+    // console.log('realtor: __++++___:', realtor);
     const previewHtml = generateEmailPreview(
       subject as string,
       body as string,

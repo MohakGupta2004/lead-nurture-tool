@@ -2,6 +2,7 @@ import { Worker } from "bullmq";
 import { connection } from "../queues/connection.js";
 import { RealtorModel } from "../models/realtor.model.js";
 import { FestiveSendModel } from "../models/festiveSend.model.js";
+import { LeadModel } from "../models/lead.model.js";
 import { sendMail } from "../services/mails.service.js";
 import { festiveTemplate } from "../templates/templateHandler.js";
 
@@ -29,6 +30,16 @@ new Worker(
         const realtor = await RealtorModel.findById(realtorId);
         if (!realtor) throw new Error("Realtor not found");
 
+        // Fetch lead name for personalization
+        let leadName: string | undefined;
+        try {
+            const lead = await LeadModel.findById(leadId).select("name").lean();
+            leadName = lead?.name;
+        } catch (error) {
+            console.error("Error fetching lead name:", error);
+            // Continue without name if fetch fails
+        }
+
         try {
             const unsubscribeUrl = `${process.env.FRONTEND_URL}/unsubscribe?leadId=${leadId}`;
 
@@ -36,12 +47,23 @@ new Worker(
                 body: body,
                 subject: subject,
                 realtor: {
-                    username: realtor.professionalEmail ? realtor.professionalEmail.split('@')[0] : "Realtor",
+                    clerkUserId: realtor.clerkUserId,
+                    firstName: realtor.firstName,
+                    lastName: realtor.lastName,
                     brokerageName: realtor.brokerageName || undefined,
                     professionalEmail: realtor.professionalEmail || undefined,
                     phNo: realtor.phNo || undefined,
+                    yearsInBusiness: realtor.yearsInBusiness || undefined,
+                    markets: realtor.markets || undefined,
+                    profileImageUrl: realtor.profileImageUrl || undefined,
+                    realtorType: realtor.realtorType || undefined,
+                    calendlyLink: realtor.calendlyLink || undefined,
+                    signatureImageUrl: realtor.signatureImageUrl || undefined,
+                    brandLogoUrl: realtor.brandLogoUrl || undefined,
+                    brokerageLogoUrl: realtor.brokerageLogoUrl || undefined,
                 },
-                unsubscribeUrl
+                unsubscribeUrl,
+                leadName
             });
 
             await sendMail({

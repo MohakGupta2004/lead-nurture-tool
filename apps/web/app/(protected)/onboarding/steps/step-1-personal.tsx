@@ -21,37 +21,37 @@ export default function Step1Personal() {
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-2">
-                <h2 className="text-2xl font-semibold text-white">Personal Information</h2>
-                <p className="text-zinc-400">Let's get to know you better.</p>
+                <h2 className="text-2xl font-semibold text-foreground tracking-tight">Personal Information</h2>
+                <p className="text-muted-foreground">Let's get to know you better.</p>
             </div>
 
             <div className="space-y-4">
                 <div className="space-y-2">
                     <div className="flex gap-2 w-full">
                         <div className="w-1/2">
-                            <Label htmlFor='firstname' className='text-zinc-300 pb-2'>First Name</Label>
+                            <Label htmlFor='firstname' className='text-foreground pb-2'>First Name</Label>
                             <Input
                                 id="firstname"
                                 type="text"
                                 placeholder="John"
                                 value={data.firstName}
                                 onChange={(e) => updateData({ firstName: e.target.value })}
-                                className="bg-zinc-900 border-zinc-800 text-white focus:ring-yellow-500 focus:border-yellow-500"
+                                className="bg-background border-input text-foreground focus:ring-primary focus:border-primary"
                             />
                         </div>
                         <div className="w-1/2">
-                            <Label htmlFor='lastname' className='text-zinc-300 pb-2'>Last Name</Label>
+                            <Label htmlFor='lastname' className='text-foreground pb-2'>Last Name</Label>
                             <Input
                                 id="lastname"
                                 type="text"
                                 placeholder="Doe"
                                 value={data.lastName}
                                 onChange={(e) => updateData({ lastName: e.target.value })}
-                                className="bg-zinc-900 border-zinc-800 text-white focus:ring-yellow-500 focus:border-yellow-500"
+                                className="bg-background border-input text-foreground focus:ring-primary focus:border-primary"
                             />
                         </div>
                     </div>
-                    <Label htmlFor="phone" className="text-zinc-300">Phone Number</Label>
+                    <Label htmlFor="phone" className="text-foreground">Phone Number</Label>
                     <Input
                         id="phone"
                         type="tel" // Use type="tel" for phone number input
@@ -65,12 +65,12 @@ export default function Step1Personal() {
                                 updateData({ phoneNumber: value });
                             }
                         }}
-                        className="bg-zinc-900 border-zinc-800 text-white focus:ring-yellow-500 focus:border-yellow-500"
+                        className="bg-background border-input text-foreground focus:ring-primary focus:border-primary"
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="email" className="text-zinc-300">Professional Email</Label>
+                    <Label htmlFor="email" className="text-foreground">Professional Email</Label>
                     <Input
                         id="email"
                         type="email"
@@ -79,14 +79,14 @@ export default function Step1Personal() {
                         onChange={(e) => {
                             updateData({ professionalEmail: e.target.value })
                         }}
-                        className="bg-zinc-900 border-zinc-800 text-white focus:ring-yellow-500 focus:border-yellow-500"
+                        className="bg-background border-input text-foreground focus:ring-primary focus:border-primary"
                     />
                 </div>
 
                 <div className="space-y-4">
                     <div className="flex justify-between">
-                        <Label className="text-zinc-300">Years in Business</Label>
-                        <span className="text-yellow-500 font-medium">{data.yearsInBusiness} years</span>
+                        <Label className="text-foreground">Years in Business</Label>
+                        <span className="text-primary font-medium">{data.yearsInBusiness} years</span>
                     </div>
                     <Slider
                         value={[data.yearsInBusiness]}
@@ -98,13 +98,13 @@ export default function Step1Personal() {
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="calendly" className="text-zinc-300">Calendly Link (Optional)</Label>
+                    <Label htmlFor="calendly" className="text-foreground">Calendly Link (Optional)</Label>
                     <Input
                         id="calendly"
                         placeholder="https://calendly.com/your-link"
                         value={data.calendlyLink}
                         onChange={(e) => updateData({ calendlyLink: e.target.value })}
-                        className="bg-zinc-900 border-zinc-800 text-white focus:ring-yellow-500 focus:border-yellow-500"
+                        className="bg-background border-input text-foreground focus:ring-primary focus:border-primary"
                     />
                 </div>
             </div>
@@ -112,7 +112,7 @@ export default function Step1Personal() {
             <div className="pt-4 flex justify-end">
                 <Button
                     onClick={handleNext}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8"
                 >
                     Continue
                 </Button>
