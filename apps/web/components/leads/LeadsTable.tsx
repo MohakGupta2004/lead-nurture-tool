@@ -173,9 +173,9 @@ export function LeadsTable({ campaigns }: { campaigns: { id: string; name: strin
     }
 
     return (
-        <div className="rounded-md border">
+        <div className="overflow-hidden rounded-xl border-none bg-card shadow-sm ring-1 ring-black/5">
             <Table>
-                <TableHeader>
+                <TableHeader className="bg-muted/40">
                     <TableRow>
                         <TableHead>Name</TableHead>
                         <TableHead>Email</TableHead>

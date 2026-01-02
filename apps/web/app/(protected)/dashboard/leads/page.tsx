@@ -50,7 +50,7 @@ export default function LeadsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="secondary" className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button>
             <CheckCircle2 className="mr-2 h-4 w-4" /> Mark as Done & Next
           </Button>
           <ImportLeadModal />
@@ -64,7 +64,7 @@ export default function LeadsPage() {
           <Input
             type="search"
             placeholder="Search by email or name..."
-            className="pl-8"
+            className="pl-8 bg-background"
           />
         </div>
         <Select
@@ -77,7 +77,7 @@ export default function LeadsPage() {
             setSelectedCampaign(campaign ? { id: campaign.id, name: campaign.name } : { id: "all", name: "all" });
           }}
         >
-          <SelectTrigger className="w-45">
+          <SelectTrigger className="w-[200px] bg-background">
             <SelectValue placeholder="All Campaigns" />
           </SelectTrigger>
           <SelectContent>

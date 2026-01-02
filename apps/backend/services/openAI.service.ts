@@ -89,7 +89,7 @@ export const generateAIMail = async (
             Output quality:
             {
               "subject": "Totally understandable",
-              "body": "Hi there,\n\nBuying your first home can feel overwhelming, especially with so many opinions and mixed signals out there. Most first-time buyers I speak with feel exactly the same way.\n\nAfter working in the Austin market for several years, I’ve seen how helpful it can be to simply understand the process without rushing into decisions.\n\nIf you ever want to talk things through or ask something small, feel free to reply."
+              "body": "Buying your first home can feel overwhelming, especially with so many opinions and mixed signals out there. Most first-time buyers I speak with feel exactly the same way.\n\nAfter working in the Austin market for several years, I've seen how helpful it can be to simply understand the process without rushing into decisions.\n\nIf you ever want to talk things through or ask something small, feel free to reply."
             }
 
             ### System Example 2 (Seller Context)
@@ -106,7 +106,7 @@ export const generateAIMail = async (
             Output quality:
             {
               "subject": "No rush at all",
-              "body": "Hi there,\n\nMany homeowners I speak with aren’t sure about timing, especially with how the market keeps shifting.\n\nIn my experience at Oak Realty, even understanding your options without committing to anything can bring a lot of clarity.\n\nIf it helps, you’re always welcome to reply and share what you’re thinking."
+              "body": "Many homeowners I speak with aren't sure about timing, especially with how the market keeps shifting.\n\nIn my experience at Oak Realty, even understanding your options without committing to anything can bring a lot of clarity.\n\nIf it helps, you're always welcome to reply and share what you're thinking."
             }
 
             Follow this exact quality level and emotional tone.
@@ -125,6 +125,7 @@ export const generateAIMail = async (
               - Body: 3 to 4 short paragraphs
               - Each paragraph: 1 to 2 sentences only
               - Use natural line breaks between paragraphs
+              - DO NOT include greeting (Hi, Hello, Dear, etc.) - templates handle greetings separately
               - End with a soft, optional CTA (replying, checking in, asking a question)
 
               PERSONALIZATION RULES:
@@ -153,7 +154,7 @@ export const generateAIMail = async (
               Expected Output:
               {
                 "subject": "Just checking in",
-                "body": "Hi there,\n\nI wanted to check in and see what thoughts came up after the open house. It’s very common for things to feel unclear at this stage.\n\nAfter working with buyers around San Diego for years, I’ve learned that clarity often comes with time and the right information.\n\nIf you have any questions at all, feel free to reply."
+                "body": "I wanted to check in and see what thoughts came up after the open house. It's very common for things to feel unclear at this stage.\n\nAfter working with buyers around San Diego for years, I've learned that clarity often comes with time and the right information.\n\nIf you have any questions at all, feel free to reply."
               }
 
               ### User Example 2
@@ -170,7 +171,7 @@ export const generateAIMail = async (
               Expected Output:
               {
                 "subject": "Market questions?",
-                "body": "Hi there,\n\nA lot of homeowners I speak with are feeling uncertain about the market right now, and that’s completely understandable.\n\nAt Harbor Homes, we often help sellers simply explore what their options look like without any pressure to act.\n\nIf you’d like, you can reply and let me know what’s been on your mind."
+                "body": "A lot of homeowners I speak with are feeling uncertain about the market right now, and that's completely understandable.\n\nAt Harbor Homes, we often help sellers simply explore what their options look like without any pressure to act.\n\nIf you'd like, you can reply and let me know what's been on your mind."
               }
 
               Now generate a NEW email for the given topic using the same quality, tone, and structure.
@@ -232,6 +233,7 @@ export const generateFestiveMail = async (
             RULES:
             - Subject must be catchy and festive (e.g., "Wishing you joy this \${festival}", "Happy \${festival} from [Name]")
             - Body should be 2-3 short paragraphs.
+            - DO NOT include greeting (like "Hi there,") as it will be added by the template
             - Mention the festival explicitly.
             - Sign off with the realtor's name/brokerage if available.
             - Output must strictly follow the provided JSON schema.

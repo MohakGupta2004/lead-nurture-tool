@@ -31,32 +31,32 @@ export default function Step5Review() {
     const ReviewItem = ({ label, value, step, isImage = false }: { label: string, value: string | number | undefined, step: number, isImage?: boolean }) => (
         <div className="group relative">
             <div className="space-y-1">
-                <Label className="text-zinc-500 text-xs uppercase tracking-wider">{label}</Label>
+                <Label className="text-muted-foreground text-xs uppercase tracking-wider">{label}</Label>
                 {isImage && typeof value === 'string' && value ? (
                     <div className="mt-1">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={value} alt="Brand Logo" className="h-10 w-auto object-contain rounded-sm" />
                     </div>
                 ) : (
-                    <p className="text-white font-medium">{value || '-'}</p>
+                    <p className="text-foreground font-medium">{value || '-'}</p>
                 )}
             </div>
             <Button
                 variant="link"
-                className="absolute top-0 right-0 text-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity h-auto p-0 text-xs"
+                className="absolute top-0 right-0 text-primary opacity-0 group-hover:opacity-100 transition-opacity h-auto p-0 text-xs"
                 onClick={() => goToStep(step)}
             >
                 Edit
             </Button>
-            <div className="h-px bg-zinc-800 mt-3" />
+            <div className="h-px bg-border mt-3" />
         </div>
     )
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-2">
-                <h2 className="text-2xl font-semibold text-white">Review & Confirm</h2>
-                <p className="text-zinc-400">Please verify your information.</p>
+                <h2 className="text-2xl font-semibold text-foreground tracking-tight">Review & Confirm</h2>
+                <p className="text-muted-foreground">Please verify your information.</p>
             </div>
 
             <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
@@ -76,9 +76,9 @@ export default function Step5Review() {
                 <ReviewItem label="Signature Image" value={data.signatureImageUrl} step={4} isImage />
             </div>
 
-            <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg flex gap-3 items-start">
-                <AlertTriangle className="text-yellow-500 w-5 h-5 shrink-0 mt-0.5" />
-                <p className="text-sm text-yellow-200/80">
+            <div className="bg-primary/10 border border-primary/20 p-4 rounded-lg flex gap-3 items-start">
+                <AlertTriangle className="text-primary w-5 h-5 shrink-0 mt-0.5" />
+                <p className="text-sm text-primary/80">
                     Please make sure all information is correct before proceeding. You can update some details later in your profile settings.
                 </p>
             </div>
@@ -87,14 +87,14 @@ export default function Step5Review() {
                 <Button
                     variant="ghost"
                     onClick={prevStep}
-                    className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted"
                     disabled={loading}
                 >
                     Back
                 </Button>
                 <Button
                     onClick={handleFinish}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8"
                     disabled={loading}
                 >
                     {loading ? (

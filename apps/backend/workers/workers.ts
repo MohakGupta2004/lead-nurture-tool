@@ -1,4 +1,5 @@
 import { Worker } from "bullmq";
+import dotenv from "dotenv";
 import { connection } from "../queues/connection.js";
 import { MailModel } from "../models/mails.model.js";
 import { CampaignModel } from "../models/campaing.model.js";
@@ -6,9 +7,10 @@ import { LeadModel } from "../models/lead.model.js";
 import { sendMail, sendBatchMails } from "../services/mails.service.js";
 import { generateUnsubscribeToken } from "../utils/unsubscribeToken.js";
 import connectDB from "../db/db.ts";
-import dotenv from "dotenv";
+
 dotenv.config();
 connectDB();
+
 import {
   basicTemplate,
   brandedTemplate,
@@ -70,9 +72,27 @@ new Worker(
         console.log("All recipients unsubscribed, skipping batch");
         return;
       }
+
+      // Fetch lead names for personalization
+      const leadNamesMap = new Map<string, string>();
+      try {
+        const leadDocs = await LeadModel.find({
+          email: { $in: validRecipients },
+          campaignId: mail.campaignId
+        }).select("email name").lean();
+        
+        leadDocs.forEach(lead => {
+          leadNamesMap.set(lead.email, lead.name);
+        });
+      } catch (error) {
+        console.error("Error fetching lead names:", error);
+        // Continue without names if fetch fails
+      }
+
       const emailsToSend = validRecipients.map((recipient: string) => {
         const token = generateUnsubscribeToken(mail._id.toString(), recipient);
         const unsubscribeUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/mail/unsubscribe?token=${token}`;
+        const leadName = leadNamesMap.get(recipient);
 
         let html: string;
         console.log("mail Template Style ", mail.templateStyle);
@@ -83,7 +103,8 @@ new Worker(
               step.subject!,
               step.body!,
               realtor,
-              unsubscribeUrl
+              unsubscribeUrl,
+              leadName
             );
             break;
           case "professional":
@@ -91,7 +112,8 @@ new Worker(
               step.subject!,
               step.body!,
               realtor,
-              unsubscribeUrl
+              unsubscribeUrl,
+              leadName
             );
             break;
           case "modern":
@@ -99,7 +121,8 @@ new Worker(
               step.subject!,
               step.body!,
               realtor,
-              unsubscribeUrl
+              unsubscribeUrl,
+              leadName
             );
             break;
           default:
@@ -107,7 +130,8 @@ new Worker(
               step.subject!,
               step.body!,
               realtor,
-              unsubscribeUrl
+              unsubscribeUrl,
+              leadName
             );
         }
 
@@ -133,8 +157,6 @@ new Worker(
       }
       return;
     }
-
-
   },
   {
     connection,

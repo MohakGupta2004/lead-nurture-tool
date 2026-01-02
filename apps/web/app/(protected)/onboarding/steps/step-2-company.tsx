@@ -54,24 +54,24 @@ export default function Step2Company() {
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-2">
-                <h2 className="text-2xl font-semibold text-white">Company & Markets</h2>
-                <p className="text-zinc-400">Tell us about your business reach.</p>
+                <h2 className="text-2xl font-semibold text-foreground tracking-tight">Company & Markets</h2>
+                <p className="text-muted-foreground">Tell us about your business reach.</p>
             </div>
 
             <div className="space-y-4">
                 <div className="space-y-2">
-                    <Label htmlFor="company" className="text-zinc-300">Company Name</Label>
+                    <Label htmlFor="company" className="text-foreground">Company Name</Label>
                     <Input
                         id="company"
                         placeholder="Your Company Name"
                         value={data.businessName}
                         onChange={(e) => updateData({ businessName: e.target.value })}
-                        className="bg-zinc-900 border-zinc-800 text-white focus:ring-yellow-500 focus:border-yellow-500"
+                        className="bg-background border-input text-foreground focus:ring-primary focus:border-primary"
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <Label className="text-zinc-300">Markets/Cities (Canada)</Label>
+                    <Label className="text-foreground">Markets/Cities (Canada)</Label>
 
                     <Popover open={open} onOpenChange={setOpen}>
                         <PopoverTrigger asChild>
@@ -79,7 +79,7 @@ export default function Step2Company() {
                                 variant="outline"
                                 role="combobox"
                                 aria-expanded={open}
-                                className="w-full justify-between bg-zinc-900 border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                                className="w-full justify-between bg-background border-input text-foreground hover:bg-muted hover:text-foreground"
                             >
                                 {data.markets.length > 0
                                     ? `${data.markets.length} cities selected`
@@ -87,9 +87,9 @@ export default function Step2Company() {
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-zinc-900 border-zinc-800 text-white">
-                            <Command className="bg-zinc-900 text-white">
-                                <CommandInput placeholder="Search Canadian city..." className="h-9 text-white" />
+                        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-popover border-border text-popover-foreground">
+                            <Command className="bg-popover text-popover-foreground">
+                                <CommandInput placeholder="Search Canadian city..." className="h-9 text-foreground" />
                                 <CommandList>
                                     <CommandEmpty>No city found.</CommandEmpty>
                                     <CommandGroup className="max-h-[200px] overflow-y-auto">
@@ -107,7 +107,7 @@ export default function Step2Company() {
                                                         // Let's just use the cityState variable directly since we are inside the map.
                                                         toggleCity(cityState)
                                                     }}
-                                                    className="text-zinc-300 aria-selected:bg-zinc-800 aria-selected:text-white cursor-pointer"
+                                                    className="text-foreground aria-selected:bg-muted aria-selected:text-foreground cursor-pointer"
                                                 >
                                                     <div className={cn(
                                                         "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
@@ -129,9 +129,9 @@ export default function Step2Company() {
 
                     <div className="flex flex-wrap gap-2 mt-2">
                         {data.markets.map((city) => (
-                            <div key={city} className="bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 px-3 py-1 rounded-full text-sm flex items-center gap-2 animate-in zoom-in-50 duration-200">
+                            <div key={city} className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full text-sm flex items-center gap-2 animate-in zoom-in-50 duration-200">
                                 {city}
-                                <button onClick={() => removeCity(city)} className="hover:text-yellow-400">
+                                <button onClick={() => removeCity(city)} className="hover:text-primary/80">
                                     <X size={14} />
                                 </button>
                             </div>
@@ -144,13 +144,13 @@ export default function Step2Company() {
                 <Button
                     variant="ghost"
                     onClick={prevStep}
-                    className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
                     Back
                 </Button>
                 <Button
                     onClick={handleNext}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-8"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8"
                 >
                     Continue
                 </Button>
